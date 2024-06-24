@@ -14,9 +14,13 @@ public class PlayerMovement : MonoBehaviour
     }
 
     void FixedUpdate() {
-        horizontal = Input.GetAxis("Horizontal");
-        Debug.Log(rb.velocity);
-        Debug.Log(horizontal);
-        rb.velocity = new Vector2(horizontal*speed, rb.velocity.y);
+        int hor = 0;
+        int ver = 0;
+        if (Input.GetKey(KeyCode.UpArrow)) ver++;
+        if (Input.GetKey(KeyCode.DownArrow)) ver--;
+        if (Input.GetKey(KeyCode.LeftArrow)) hor--;
+        if (Input.GetKey(KeyCode.RightArrow)) hor++;
+        
+        rb.velocity = new Vector2(hor*speed, ver*speed);
     }
 }
