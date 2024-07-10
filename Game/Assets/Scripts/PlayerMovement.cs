@@ -6,7 +6,7 @@ public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] Rigidbody2D rb;
 
-    const float speed = 7f;
+    const float speed = 6.5f;
 
     void Awake() {
         Application.targetFrameRate = 60;
