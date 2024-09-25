@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: bce83b29df3d76e4381ed99996fdbfef
+guid: 45a114204c728d54d844489f87b4bd75
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -9,7 +9,7 @@ TrueTypeFontImporter:
   characterPadding: 1
   includeFontData: 1
   fontNames:
-  - Pixellari
+  - Pixellariedit
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 2

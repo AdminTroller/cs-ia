@@ -1545,7 +1545,7 @@ Font:
   m_Descent: -4
   m_DefaultStyle: 0
   m_FontNames:
-  - Pixellari
+  - Pixellariedit
   m_FallbackFonts: []
   m_FontRenderingMode: 2
   m_UseLegacyBoundsCalculation: 0

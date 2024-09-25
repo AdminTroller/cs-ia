@@ -7,7 +7,7 @@ public class PlayerFlashlight : MonoBehaviour
     [SerializeField] AudioSource sound;
     [SerializeField] AudioClip on;
     [SerializeField] AudioClip off;
-    bool toggle = true;
+    public static bool toggle = true;
 
     void Update() {
         Vector2 displacement = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
