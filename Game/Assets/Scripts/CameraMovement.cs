@@ -6,7 +6,7 @@ public class CameraMovement : MonoBehaviour
 {
     [SerializeField] Transform player;
 
-    void Update() {
-        transform.position = new Vector3(player.transform.position.x, player.transform.position.y, -10);
+    void LateUpdate() {
+        transform.position = new Vector3(player.position.x, player.position.y, -10);
     }
 }
