@@ -10,7 +10,7 @@ public class Battery : MonoBehaviour
     [SerializeField] TextMeshProUGUI batNum;
     [SerializeField] PlayerFlashlight playerFlashlight;
 
-    float bat = 100;
+    public static float bat = 100;
     public static bool batEmpty = false;
     float drainRate = 0.4f;
 
