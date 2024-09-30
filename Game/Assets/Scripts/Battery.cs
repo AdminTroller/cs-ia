@@ -12,8 +12,7 @@ public class Battery : MonoBehaviour
 
     float bat = 100;
     public static bool batEmpty = false;
-    // float drainRate = 0.4f;
-    float drainRate = 10f;
+    float drainRate = 0.4f;
 
     void Update() {
         Drain();
@@ -24,7 +23,7 @@ public class Battery : MonoBehaviour
         if (PlayerFlashlight.toggle && bat > 0) {
             bat -= drainRate * Time.deltaTime;
         }
-        
+
         if (bat <= 0 && !batEmpty) {
             batEmpty = true;
             bat = 0;
