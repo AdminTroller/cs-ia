@@ -8,9 +8,12 @@ public class Battery : MonoBehaviour
     [SerializeField] Sprite[] batStates;
     public Color[] batColors;
     [SerializeField] TextMeshProUGUI batNum;
+    [SerializeField] PlayerFlashlight playerFlashlight;
 
-    public float bat = 100;
-    float drainRate = 0.4f;
+    float bat = 100;
+    public static bool batEmpty = false;
+    // float drainRate = 0.4f;
+    float drainRate = 10f;
 
     void Update() {
         Drain();
@@ -18,8 +21,14 @@ public class Battery : MonoBehaviour
     }
 
     void Drain() {
-        if (PlayerFlashlight.toggle) {
+        if (PlayerFlashlight.toggle && bat > 0) {
             bat -= drainRate * Time.deltaTime;
+        }
+        
+        if (bat <= 0 && !batEmpty) {
+            batEmpty = true;
+            bat = 0;
+            playerFlashlight.Toggle();
         }
     }
 

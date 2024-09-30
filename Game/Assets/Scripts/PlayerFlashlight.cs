@@ -16,12 +16,15 @@ public class PlayerFlashlight : MonoBehaviour
         if (displacement.y < 0) rotate -= 180;
         flashlight.transform.eulerAngles = Vector3.forward * rotate;
 
-        if (Input.GetKeyDown(KeyCode.F)) {
-            toggle = !toggle;
+        
+        if (Input.GetKeyDown(KeyCode.F) && !Battery.batEmpty) Toggle();
+        flashlight.enabled = toggle;
+    }
+
+    public void Toggle() {
+        toggle = !toggle;
             if (toggle) sound.clip = on;
             else sound.clip = off;
             sound.Play();
-        }
-        flashlight.enabled = toggle;
     }
 }

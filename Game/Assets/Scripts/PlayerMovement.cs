@@ -6,7 +6,7 @@ public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] Rigidbody2D rb;
 
-    const float speed = 6f;
+    const float speed = 6.2f;
 
     void Awake() {
         Application.targetFrameRate = 60;
@@ -20,6 +20,6 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKey(KeyCode.A)) hor--;
         if (Input.GetKey(KeyCode.D)) hor++;
         
-        rb.velocity = new Vector2(hor*speed, ver*speed);
+        rb.velocity = new Vector2(hor, ver).normalized*speed;
     }
 }
