@@ -1,5 +1,6 @@
 
 using UnityEngine;
+using UnityEngine.Assertions;
 
 public class Task : MonoBehaviour
 {
@@ -11,8 +12,8 @@ public class Task : MonoBehaviour
     }
 
     void Update() {
-        // if (self.GetContacts(0) == player) {
-        //     Debug.Log("a");
-        // }
+        if (self.IsTouching(player)) {
+            Debug.Log("task");
+        }
     }
 }
