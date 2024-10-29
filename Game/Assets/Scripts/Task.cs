@@ -1,6 +1,5 @@
 
 using UnityEngine;
-using UnityEngine.Assertions;
 
 public class Task : MonoBehaviour
 {
@@ -13,7 +12,7 @@ public class Task : MonoBehaviour
 
     void Update() {
         if (self.IsTouching(player)) {
-            Debug.Log("task");
+            InteractIcon.show = true;
         }
     }
 }
