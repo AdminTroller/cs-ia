@@ -15,10 +15,12 @@ public class PlayerMovement : MonoBehaviour
     void FixedUpdate() {
         int hor = 0;
         int ver = 0;
-        if (Input.GetKey(KeyCode.W)) ver++;
-        if (Input.GetKey(KeyCode.S)) ver--;
-        if (Input.GetKey(KeyCode.A)) hor--;
-        if (Input.GetKey(KeyCode.D)) hor++;
+        if (!TaskManager.inTask) {
+            if (Input.GetKey(KeyCode.W)) ver++;
+            if (Input.GetKey(KeyCode.S)) ver--;
+            if (Input.GetKey(KeyCode.A)) hor--;
+            if (Input.GetKey(KeyCode.D)) hor++;
+        }
         
         rb.velocity = new Vector2(hor, ver).normalized*speed;
     }
