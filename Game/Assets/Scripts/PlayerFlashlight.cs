@@ -10,6 +10,7 @@ public class PlayerFlashlight : MonoBehaviour
     [SerializeField] AudioClip on;
     [SerializeField] AudioClip off;
     public static bool toggle = true;
+    float rotate = 0;
 
     [SerializeField] SpriteRenderer white;
     [SerializeField] AudioClip flash;
@@ -22,8 +23,14 @@ public class PlayerFlashlight : MonoBehaviour
     [SerializeField] LayerMask mask;
 
     void Update() {
+
+        if (toggle) seeEnemy(rotate);
+        else Enemy.seen = false;
+        if (Vector2.Distance(transform.position, enemy1.position) < 3) Enemy.seen = true;
+
+        if (TaskManager.inTask) return;
+
         Vector2 displacement = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
-        float rotate;
         rotate = -Mathf.Atan(displacement.x/displacement.y) * Mathf.Rad2Deg;
         if (displacement.y < 0) rotate -= 180;
         anchor.eulerAngles = Vector3.forward * rotate;
@@ -31,12 +38,9 @@ public class PlayerFlashlight : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F) && !Battery.batEmpty && !inFlash) Toggle();
         flashlight.enabled = toggle;
 
-        if (Input.GetKeyDown(KeyCode.Space) && Battery.bat > 15 && !inFlash) Flash();
+        if (Input.GetKeyDown(KeyCode.Space) && toggle && Battery.bat > 15 && !inFlash) Flash();
         if (inFlash) White();
 
-        if (toggle) seeEnemy(rotate);
-        else Enemy.seen = false;
-        if (Vector2.Distance(transform.position, enemy1.position) < 3) Enemy.seen = true;
     }
 
     void seeEnemy(float angleCenter) {
@@ -49,8 +53,8 @@ public class PlayerFlashlight : MonoBehaviour
             int inverter = 1;
             if (angle < -90 && angle > -270) inverter = -1;
 
-            Debug.DrawRay(transform.position, new Vector2(x, 1).normalized * 30 * inverter, Color.red);
-            RaycastHit2D ray = Physics2D.Raycast(transform.position, new Vector2(x, 1) * inverter, 30, mask);
+            Debug.DrawRay(flashlight.transform.position, new Vector2(x, 1).normalized * 30 * inverter, Color.red);
+            RaycastHit2D ray = Physics2D.Raycast(flashlight.transform.position, new Vector2(x, 1) * inverter, 30, mask);
             if (ray.collider == enemy1col) {
                 Enemy.seen = true;
                 break;
