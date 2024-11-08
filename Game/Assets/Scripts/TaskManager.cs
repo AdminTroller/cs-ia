@@ -3,10 +3,14 @@ using UnityEngine;
 public class TaskManager : MonoBehaviour
 {
     public static bool inTask = false;
-    [SerializeField] SpriteRenderer spriteRenderer;
+    [SerializeField] GameObject taskGUI;
+
+    [SerializeField] SpriteRenderer crossRenderer;
+    [SerializeField] Sprite cross;
+    [SerializeField] Sprite crossHover;
 
     void Update() {
-        spriteRenderer.enabled = inTask;
+        taskGUI.SetActive(inTask);
     }
     
 }
