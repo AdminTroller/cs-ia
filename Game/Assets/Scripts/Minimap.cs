@@ -10,6 +10,7 @@ public class Minimap : MonoBehaviour
 
     void Update() {
         you.localPosition = player.position * ratio + new Vector3(0.9375f, -1.875f, 0);
-        minimap.SetActive(Input.GetKey(KeyCode.Tab));
+        if (TaskManager.inTask) minimap.SetActive(false);
+        else minimap.SetActive(Input.GetKey(KeyCode.Tab));
     }
 }
