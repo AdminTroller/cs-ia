@@ -7,7 +7,9 @@ public class Pathfinding : MonoBehaviour
 {
 
     [SerializeField] Tilemap walls;
+    BoundsInt bounds;
     int[,] maze;
+    List<Node> path;
 
     int[,] neighbourOffsets = new int[,] {{-1,0},{1,0},{0,-1},{0,1}};
 
@@ -80,31 +82,9 @@ public class Pathfinding : MonoBehaviour
     }
     
     void Start() {
-        // int[,] maze = {
-        //     {0,0,0,0,0},
-        //     {1,1,1,0,0},
-        //     {0,0,0,0,0},
-        //     {0,1,1,1,1},
-        //     {0,0,1,0,0},
-        //     {0,0,0,0,0},
-        // };
-        // Node start = new Node(0,0);
-        // Node end = new Node(4,4);
-        
-        // List<Node> path = FindPath(maze, start, end);
-        // path.Reverse();
-        // foreach (Node node in path) {
-        //     Debug.Log(node.pos[0] + " " + node.pos[1]);
-        // }
 
         walls.CompressBounds();
-        BoundsInt bounds = walls.cellBounds;
-        Debug.Log(bounds);
-
-        Debug.Log(bounds.xMin);
-        Debug.Log(bounds.xMax);
-        Debug.Log(bounds.yMin);
-        Debug.Log(bounds.yMax);
+        bounds = walls.cellBounds;
 
         maze = new int[bounds.yMax - bounds.yMin, bounds.xMax - bounds.xMin];
         for (int j=bounds.yMax-1; j>=bounds.yMin; j--) {
@@ -121,20 +101,35 @@ public class Pathfinding : MonoBehaviour
         //     }
         //     Debug.Log(temp);
         // }
+        // Debug.Log(bounds.xMin + 0.5f);
+        // Debug.Log(bounds.yMin + 0.5f);
+
+        Node start = new Node(0+31,0+54);
+        Node end = new Node(-2+31,20+54);
+        
+        path = FindPath(maze, start, end);
+        path.Reverse();
+        foreach (Node node in path) {
+            Debug.Log(node.pos[0] + " " + node.pos[1]);
+        }
     }
 
     void Update() {
         walls.CompressBounds();
-        BoundsInt bounds = walls.cellBounds;
         float xOffset = bounds.xMin + 0.5f;
         float yOffset = bounds.yMin + 0.5f;
-        for (int i=0; i<maze.GetLength(0); i++) {
-            for (int j=0; j<maze.GetLength(1); j++) {
-                if (maze[i,j] == 1) {
-                    Debug.DrawLine(new Vector2(j-0.4f,i-0.4f)+new Vector2(xOffset,yOffset), new Vector2(j+0.4f,i+0.4f)+new Vector2(xOffset,yOffset));
-                    Debug.DrawLine(new Vector2(j-0.4f,i+0.4f)+new Vector2(xOffset,yOffset), new Vector2(j+0.4f,i-0.4f)+new Vector2(xOffset,yOffset));
-                }
-            }
+        // for (int i=0; i<maze.GetLength(0); i++) {
+        //     for (int j=0; j<maze.GetLength(1); j++) {
+        //         if (maze[i,j] == 1) {
+        //             Debug.DrawLine(new Vector2(j-0.4f,i-0.4f)+new Vector2(xOffset,yOffset), new Vector2(j+0.4f,i+0.4f)+new Vector2(xOffset,yOffset));
+        //             Debug.DrawLine(new Vector2(j-0.4f,i+0.4f)+new Vector2(xOffset,yOffset), new Vector2(j+0.4f,i-0.4f)+new Vector2(xOffset,yOffset));
+        //         }
+        //     }
+        // }
+
+        for(int i=0; i<path.Count-1; i++) {
+            Debug.DrawLine(new Vector2(path[i].pos[1], path[i].pos[0])+new Vector2(xOffset,yOffset), new Vector2(path[i+1].pos[1], path[i+1].pos[0])+new Vector2(xOffset,yOffset));
+            // Debug.Log(path[i].pos[0] + " " + path[i].pos[1]);
         }
     }
 }
