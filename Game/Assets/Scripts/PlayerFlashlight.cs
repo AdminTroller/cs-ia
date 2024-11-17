@@ -53,7 +53,7 @@ public class PlayerFlashlight : MonoBehaviour
             int inverter = 1;
             if (angle < -90 && angle > -270) inverter = -1;
 
-            Debug.DrawRay(flashlight.transform.position, new Vector2(x, 1).normalized * 30 * inverter, Color.red);
+            // Debug.DrawRay(flashlight.transform.position, new Vector2(x, 1).normalized * 30 * inverter, Color.red);
             RaycastHit2D ray = Physics2D.Raycast(flashlight.transform.position, new Vector2(x, 1) * inverter, 30, mask);
             if (ray.collider == enemy1col) {
                 Enemy.seen = true;

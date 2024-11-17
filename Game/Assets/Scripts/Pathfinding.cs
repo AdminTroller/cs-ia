@@ -5,6 +5,7 @@ using UnityEngine.Tilemaps;
 
 public class Pathfinding : MonoBehaviour
 {
+    [SerializeField] Transform player;
 
     [SerializeField] Tilemap walls;
     BoundsInt bounds;
@@ -103,33 +104,22 @@ public class Pathfinding : MonoBehaviour
         // }
         // Debug.Log(bounds.xMin + 0.5f);
         // Debug.Log(bounds.yMin + 0.5f);
-
-        Node start = new Node(0+31,0+54);
-        Node end = new Node(-2+31,20+54);
-        
-        path = FindPath(maze, start, end);
-        path.Reverse();
-        foreach (Node node in path) {
-            Debug.Log(node.pos[0] + " " + node.pos[1]);
-        }
     }
 
     void Update() {
+
         walls.CompressBounds();
-        float xOffset = bounds.xMin + 0.5f;
-        float yOffset = bounds.yMin + 0.5f;
-        // for (int i=0; i<maze.GetLength(0); i++) {
-        //     for (int j=0; j<maze.GetLength(1); j++) {
-        //         if (maze[i,j] == 1) {
-        //             Debug.DrawLine(new Vector2(j-0.4f,i-0.4f)+new Vector2(xOffset,yOffset), new Vector2(j+0.4f,i+0.4f)+new Vector2(xOffset,yOffset));
-        //             Debug.DrawLine(new Vector2(j-0.4f,i+0.4f)+new Vector2(xOffset,yOffset), new Vector2(j+0.4f,i-0.4f)+new Vector2(xOffset,yOffset));
-        //         }
-        //     }
-        // }
+        int xOffset = bounds.xMin;
+        int yOffset = bounds.yMin;
+
+        Node start = new Node(Mathf.FloorToInt(transform.position.y) - yOffset, Mathf.FloorToInt(transform.position.x) - xOffset);
+        Node end = new Node(Mathf.FloorToInt(player.position.y) - yOffset, Mathf.FloorToInt(player.position.x) - xOffset);
+        
+        path = FindPath(maze, start, end);
+        path.Reverse();
 
         for(int i=0; i<path.Count-1; i++) {
-            Debug.DrawLine(new Vector2(path[i].pos[1], path[i].pos[0])+new Vector2(xOffset,yOffset), new Vector2(path[i+1].pos[1], path[i+1].pos[0])+new Vector2(xOffset,yOffset));
-            // Debug.Log(path[i].pos[0] + " " + path[i].pos[1]);
+            Debug.DrawLine(new Vector2(path[i].pos[1], path[i].pos[0])+new Vector2(xOffset+0.5f,yOffset+0.5f), new Vector2(path[i+1].pos[1], path[i+1].pos[0])+new Vector2(xOffset+0.5f,yOffset+0.5f),Color.red);
         }
     }
 }
