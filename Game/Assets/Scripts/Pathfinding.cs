@@ -6,11 +6,16 @@ using UnityEngine.Tilemaps;
 public class Pathfinding : MonoBehaviour
 {
     [SerializeField] Transform player;
+    Vector2Int playerPosRound;
+    Vector2Int posRound;
 
     [SerializeField] Tilemap walls;
     BoundsInt bounds;
     int[,] maze;
     List<Node> path;
+
+    int xOffset;
+    int yOffset;
 
     int[,] neighbourOffsets = new int[,] {{-1,0},{1,0},{0,-1},{0,1}};
 
@@ -95,6 +100,10 @@ public class Pathfinding : MonoBehaviour
             }
         }
 
+        walls.CompressBounds();
+        xOffset = bounds.xMin;
+        yOffset = bounds.yMin;
+
         // for (int i=maze.GetLength(0)-1; i>=0; i--) {
         //     String temp = "";
         //     for (int j=0; j<maze.GetLength(1); j++) {
@@ -107,13 +116,16 @@ public class Pathfinding : MonoBehaviour
     }
 
     void Update() {
+        TrackPlayer();
+    }
 
-        walls.CompressBounds();
-        int xOffset = bounds.xMin;
-        int yOffset = bounds.yMin;
+    void TrackPlayer() {
+        
+        playerPosRound = new Vector2Int(Mathf.FloorToInt(player.transform.position.x), Mathf.FloorToInt(player.transform.position.y));
+        posRound = new Vector2Int(Mathf.FloorToInt(transform.position.x), Mathf.FloorToInt(transform.position.y));
 
-        Node start = new Node(Mathf.FloorToInt(transform.position.y) - yOffset, Mathf.FloorToInt(transform.position.x) - xOffset);
-        Node end = new Node(Mathf.FloorToInt(player.position.y) - yOffset, Mathf.FloorToInt(player.position.x) - xOffset);
+        Node start = new Node(playerPosRound.y - yOffset, playerPosRound.x - xOffset);
+        Node end = new Node(posRound.y - yOffset, posRound.x - xOffset);
         
         path = FindPath(maze, start, end);
         path.Reverse();
