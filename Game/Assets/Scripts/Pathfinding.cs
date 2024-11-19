@@ -7,6 +7,8 @@ public class Pathfinding : MonoBehaviour
     [SerializeField] Rigidbody2D rb;
     Vector2 dir;
 
+    [SerializeField] AudioSource sound;
+
     [SerializeField] Transform player;
     [SerializeField] BoxCollider2D playerCol;
     [SerializeField] LayerMask tileMask;
@@ -14,7 +16,7 @@ public class Pathfinding : MonoBehaviour
     Vector2Int posRound;
     float trackCooldown = 0;
 
-    int state = 2; // 0 = idle, 1 = wandering, 2 = pursuit
+    public static int state = 2; // 0 = idle, 1 = wandering, 2 = pursuit
     float speed = 5f;
 
     [SerializeField] Tilemap walls;
@@ -117,19 +119,23 @@ public class Pathfinding : MonoBehaviour
 
     void Update() {
         RaycastHit2D playerRay = Physics2D.Linecast(transform.position, player.transform.position, tileMask);
-        Debug.DrawLine(transform.position, player.transform.position, Color.green);
-        if (playerRay.collider == null) state = 1;
-        else state = 2;
 
-        if (state == 1) {
-            ChasePlayer();
+        if (state == 0) {
+            dir = Vector2.zero;
+            sound.Pause();
         }
-        else if (state == 2) {
-            trackCooldown += Time.deltaTime;
-            TrackPlayer();
-            PathfindPlayer();
-            if (trackCooldown >= 1) trackCooldown = 0;
-        } 
+        if (state == 2) {
+            sound.UnPause();
+            if (playerRay.collider == null) {
+                ChasePlayer();
+            }
+            else {
+                trackCooldown += Time.deltaTime;
+                TrackPlayer();
+                PathfindPlayer();
+                if (trackCooldown >= 1) trackCooldown = 0;
+            } 
+        }
     }
 
     void ChasePlayer() {
