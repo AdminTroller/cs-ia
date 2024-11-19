@@ -8,6 +8,8 @@ public class Pathfinding : MonoBehaviour
     Vector2 dir;
 
     [SerializeField] Transform player;
+    [SerializeField] BoxCollider2D playerCol;
+    [SerializeField] LayerMask tileMask;
     Vector2Int playerPosRound;
     Vector2Int posRound;
     float trackCooldown = 0;
@@ -19,6 +21,7 @@ public class Pathfinding : MonoBehaviour
     BoundsInt bounds;
     int[,] maze;
     List<Node> path;
+    int currentNode = -1;
 
     int xOffset;
     int yOffset;
@@ -113,12 +116,24 @@ public class Pathfinding : MonoBehaviour
     }
 
     void Update() {
-        if (state == 2) {
+        RaycastHit2D playerRay = Physics2D.Linecast(transform.position, player.transform.position, tileMask);
+        Debug.DrawLine(transform.position, player.transform.position, Color.green);
+        if (playerRay.collider == null) state = 1;
+        else state = 2;
+
+        if (state == 1) {
+            ChasePlayer();
+        }
+        else if (state == 2) {
             trackCooldown += Time.deltaTime;
             TrackPlayer();
-            Pursuit();
+            PathfindPlayer();
             if (trackCooldown >= 1) trackCooldown = 0;
         } 
+    }
+
+    void ChasePlayer() {
+        dir = new Vector2(player.transform.position.x - transform.position.x, player.transform.position.y - transform.position.y);
     }
 
     void TrackPlayer() {
@@ -134,8 +149,7 @@ public class Pathfinding : MonoBehaviour
         }
     }
 
-    int currentNode = -1;
-    void Pursuit() {
+    void PathfindPlayer() {
         if (path != null) {
             for (int i=0; i<path.Count-1; i++) {
                 Debug.DrawLine(new Vector2(path[i].pos[1], path[i].pos[0])+new Vector2(xOffset+0.5f,yOffset+0.5f), new Vector2(path[i+1].pos[1], path[i+1].pos[0])+new Vector2(xOffset+0.5f,yOffset+0.5f),Color.red);
