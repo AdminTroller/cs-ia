@@ -8,6 +8,10 @@ public class Pathfinding : MonoBehaviour
     [SerializeField] Transform player;
     Vector2Int playerPosRound;
     Vector2Int posRound;
+    float trackCooldown = 0;
+
+    int state = 2; // 0 = idle, 1 = wandering, 2 = pursuit
+    float speed = 5f;
 
     [SerializeField] Tilemap walls;
     BoundsInt bounds;
@@ -48,6 +52,7 @@ public class Pathfinding : MonoBehaviour
                     path.Add(traceback);
                     traceback = traceback.parent;
                 }
+                path.Add(traceback);
                 return path;
             }
 
@@ -103,35 +108,51 @@ public class Pathfinding : MonoBehaviour
         walls.CompressBounds();
         xOffset = bounds.xMin;
         yOffset = bounds.yMin;
-
-        // for (int i=maze.GetLength(0)-1; i>=0; i--) {
-        //     String temp = "";
-        //     for (int j=0; j<maze.GetLength(1); j++) {
-        //         temp += maze[i,j];
-        //     }
-        //     Debug.Log(temp);
-        // }
-        // Debug.Log(bounds.xMin + 0.5f);
-        // Debug.Log(bounds.yMin + 0.5f);
     }
 
     void Update() {
-        TrackPlayer();
+        if (state == 2) {
+            trackCooldown += Time.deltaTime;
+            TrackPlayer();
+            Pursuit();
+            if (trackCooldown >= 1) trackCooldown = 0;
+        } 
     }
 
     void TrackPlayer() {
-        
-        playerPosRound = new Vector2Int(Mathf.FloorToInt(player.transform.position.x), Mathf.FloorToInt(player.transform.position.y));
-        posRound = new Vector2Int(Mathf.FloorToInt(transform.position.x), Mathf.FloorToInt(transform.position.y));
+        if (trackCooldown >= 1) { // update pathfind every second
+            playerPosRound = new Vector2Int(Mathf.FloorToInt(player.transform.position.x), Mathf.FloorToInt(player.transform.position.y));
+            posRound = new Vector2Int(Mathf.FloorToInt(transform.position.x), Mathf.FloorToInt(transform.position.y));
 
-        Node start = new Node(playerPosRound.y - yOffset, playerPosRound.x - xOffset);
-        Node end = new Node(posRound.y - yOffset, posRound.x - xOffset);
-        
-        path = FindPath(maze, start, end);
-        path.Reverse();
+            Node start = new Node(posRound.y - yOffset, posRound.x - xOffset);
+            Node end = new Node(playerPosRound.y - yOffset, playerPosRound.x - xOffset);
+            
+            path = FindPath(maze, start, end);
+            path.Reverse();
+        }
+    }
 
-        for(int i=0; i<path.Count-1; i++) {
-            Debug.DrawLine(new Vector2(path[i].pos[1], path[i].pos[0])+new Vector2(xOffset+0.5f,yOffset+0.5f), new Vector2(path[i+1].pos[1], path[i+1].pos[0])+new Vector2(xOffset+0.5f,yOffset+0.5f),Color.red);
+    int currentNode = -1;
+    void Pursuit() {
+        if (path != null) {
+            for (int i=0; i<path.Count-1; i++) {
+                Debug.DrawLine(new Vector2(path[i].pos[1], path[i].pos[0])+new Vector2(xOffset+0.5f,yOffset+0.5f), new Vector2(path[i+1].pos[1], path[i+1].pos[0])+new Vector2(xOffset+0.5f,yOffset+0.5f),Color.red);
+            }
+
+            if (trackCooldown >= 1) {
+                for (int i=0; i<path.Count; i++) {
+                    if (Mathf.Abs(transform.position.x - xOffset - path[i].pos[1]) <= 1 && Mathf.Abs(transform.position.y - yOffset - path[i].pos[0]) <= 1) {
+                        // Debug.Log(path[i].pos[1] + " " + path[i].pos[0]);
+                        currentNode = i+1;
+                        break;
+                    }
+                }
+            }
+
+            if (currentNode != -1) {
+                transform.position = Vector2.MoveTowards(transform.position, new Vector2(path[currentNode].pos[1] + xOffset, path[currentNode].pos[0] + yOffset), speed * Time.deltaTime);
+            }
+            
         }
     }
 }
