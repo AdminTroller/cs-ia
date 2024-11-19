@@ -1,10 +1,12 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class Pathfinding : MonoBehaviour
 {
+    [SerializeField] Rigidbody2D rb;
+    Vector2 dir;
+
     [SerializeField] Transform player;
     Vector2Int playerPosRound;
     Vector2Int posRound;
@@ -128,7 +130,7 @@ public class Pathfinding : MonoBehaviour
             Node end = new Node(playerPosRound.y - yOffset, playerPosRound.x - xOffset);
             
             path = FindPath(maze, start, end);
-            path.Reverse();
+            if (path != null) path.Reverse();
         }
     }
 
@@ -140,7 +142,7 @@ public class Pathfinding : MonoBehaviour
             }
 
             for (int i=0; i<path.Count; i++) {
-                if (Mathf.Abs(transform.position.x - 0.5f - xOffset - path[i].pos[1]) <= 0.5f && Mathf.Abs(transform.position.y - 0.5f - yOffset - path[i].pos[0]) <= 0.5f) {
+                if (Mathf.Abs(transform.position.x - 0.5f - xOffset - path[i].pos[1]) <= 0.8f && Mathf.Abs(transform.position.y - 0.5f - yOffset - path[i].pos[0]) <= 0.8f) {
                     currentNode = i+1;
                     if (currentNode >= path.Count) currentNode -= 1;
                     break;
@@ -148,11 +150,18 @@ public class Pathfinding : MonoBehaviour
             }
 
             if (currentNode != -1) {
-                Debug.DrawLine(new Vector2(path[currentNode].pos[1] + xOffset + 0.5f + 0.5f, path[currentNode].pos[0] + yOffset + 0.5f + 0.5f), new Vector2(path[currentNode].pos[1] + xOffset - 0.5f + 0.5f, path[currentNode].pos[0] + yOffset - 0.5f + 0.5f), Color.green);
-                Debug.DrawLine(new Vector2(path[currentNode].pos[1] + xOffset - 0.5f + 0.5f, path[currentNode].pos[0] + yOffset + 0.5f + 0.5f), new Vector2(path[currentNode].pos[1] + xOffset + 0.5f + 0.5f, path[currentNode].pos[0] + yOffset - 0.5f + 0.5f), Color.green);
-                transform.position = Vector2.MoveTowards(transform.position, new Vector2(path[currentNode].pos[1] + xOffset + 0.5f, path[currentNode].pos[0] + yOffset + 0.5f), speed * Time.deltaTime);
+                // Debug.DrawLine(new Vector2(path[currentNode].pos[1] + xOffset + 0.5f + 0.5f, path[currentNode].pos[0] + yOffset + 0.5f + 0.5f), new Vector2(path[currentNode].pos[1] + xOffset - 0.5f + 0.5f, path[currentNode].pos[0] + yOffset - 0.5f + 0.5f), Color.green);
+                // Debug.DrawLine(new Vector2(path[currentNode].pos[1] + xOffset - 0.5f + 0.5f, path[currentNode].pos[0] + yOffset + 0.5f + 0.5f), new Vector2(path[currentNode].pos[1] + xOffset + 0.5f + 0.5f, path[currentNode].pos[0] + yOffset - 0.5f + 0.5f), Color.green);
+                // transform.position = Vector2.MoveTowards(transform.position, new Vector2(path[currentNode].pos[1] + xOffset + 0.5f, path[currentNode].pos[0] + yOffset + 0.5f), speed * Time.deltaTime);
+
+                dir = new Vector2(path[currentNode].pos[1] + xOffset + 0.5f - transform.position.x, path[currentNode].pos[0] + yOffset + 0.5f - transform.position.y);
             }
+            else dir = Vector2.zero;
             
         }
+    }
+
+    void FixedUpdate() {
+        rb.velocity = dir.normalized * speed;
     }
 }
