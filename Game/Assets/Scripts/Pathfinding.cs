@@ -139,18 +139,18 @@ public class Pathfinding : MonoBehaviour
                 Debug.DrawLine(new Vector2(path[i].pos[1], path[i].pos[0])+new Vector2(xOffset+0.5f,yOffset+0.5f), new Vector2(path[i+1].pos[1], path[i+1].pos[0])+new Vector2(xOffset+0.5f,yOffset+0.5f),Color.red);
             }
 
-            if (trackCooldown >= 1) {
-                for (int i=0; i<path.Count; i++) {
-                    if (Mathf.Abs(transform.position.x - xOffset - path[i].pos[1]) <= 1 && Mathf.Abs(transform.position.y - yOffset - path[i].pos[0]) <= 1) {
-                        // Debug.Log(path[i].pos[1] + " " + path[i].pos[0]);
-                        currentNode = i+1;
-                        break;
-                    }
+            for (int i=0; i<path.Count; i++) {
+                if (Mathf.Abs(transform.position.x - 0.5f - xOffset - path[i].pos[1]) <= 0.5f && Mathf.Abs(transform.position.y - 0.5f - yOffset - path[i].pos[0]) <= 0.5f) {
+                    currentNode = i+1;
+                    if (currentNode >= path.Count) currentNode -= 1;
+                    break;
                 }
             }
 
             if (currentNode != -1) {
-                transform.position = Vector2.MoveTowards(transform.position, new Vector2(path[currentNode].pos[1] + xOffset, path[currentNode].pos[0] + yOffset), speed * Time.deltaTime);
+                Debug.DrawLine(new Vector2(path[currentNode].pos[1] + xOffset + 0.5f + 0.5f, path[currentNode].pos[0] + yOffset + 0.5f + 0.5f), new Vector2(path[currentNode].pos[1] + xOffset - 0.5f + 0.5f, path[currentNode].pos[0] + yOffset - 0.5f + 0.5f), Color.green);
+                Debug.DrawLine(new Vector2(path[currentNode].pos[1] + xOffset - 0.5f + 0.5f, path[currentNode].pos[0] + yOffset + 0.5f + 0.5f), new Vector2(path[currentNode].pos[1] + xOffset + 0.5f + 0.5f, path[currentNode].pos[0] + yOffset - 0.5f + 0.5f), Color.green);
+                transform.position = Vector2.MoveTowards(transform.position, new Vector2(path[currentNode].pos[1] + xOffset + 0.5f, path[currentNode].pos[0] + yOffset + 0.5f), speed * Time.deltaTime);
             }
             
         }
