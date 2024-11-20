@@ -44,7 +44,7 @@ public class PlayerDeath : MonoBehaviour
             return;
         }
 
-        if (jumpscare.transform.localPosition.y < -2) {
+        if (jumpscare.transform.localPosition.y < -1) {
             jumpscare.transform.localPosition += new Vector3(0,30f * Time.deltaTime);
         }
         if (jumpscare.transform.localScale.x < 1) {
