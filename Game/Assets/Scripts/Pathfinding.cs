@@ -22,6 +22,7 @@ public class Pathfinding : MonoBehaviour
 
     public static int state = 2; // 0 = idle, 1 = wandering, 2 = pursuit
     float speed = 5f;
+    bool inPursuit = false;
 
     [SerializeField] Tilemap walls;
     BoundsInt bounds;
@@ -151,6 +152,7 @@ public class Pathfinding : MonoBehaviour
     }
 
     void ChasePlayer() {
+        inPursuit = true;
         dir = new Vector2(player.transform.position.x - transform.position.x, player.transform.position.y - transform.position.y);
     }
 
@@ -168,6 +170,7 @@ public class Pathfinding : MonoBehaviour
     }
 
     void PathfindPlayer() {
+        inPursuit = false;
         if (path != null) {
             for (int i=0; i<path.Count-1; i++) {
                 Debug.DrawLine(new Vector2(path[i].pos[1], path[i].pos[0])+new Vector2(xOffset+0.5f,yOffset+0.5f), new Vector2(path[i+1].pos[1], path[i+1].pos[0])+new Vector2(xOffset+0.5f,yOffset+0.5f),Color.red);
@@ -194,6 +197,8 @@ public class Pathfinding : MonoBehaviour
     }
 
     void FixedUpdate() {
+        if (inPursuit) speed = 5f;
+        else speed = 3f;
         rb.velocity = dir.normalized * speed;
     }
 }
