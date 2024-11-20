@@ -7,6 +7,10 @@ public class Pathfinding : MonoBehaviour
     [SerializeField] Rigidbody2D rb;
     Vector2 dir;
 
+    Vector2[] rayOffsets = new Vector2[]{new Vector2(-0.5f,-0.5f), new Vector2(0.5f,-0.5f),new Vector2(-0.5f,0.5f),new Vector2(0.5f,0.5f)};
+    int raysSeen = 0;
+    bool seePlayer = false;
+
     [SerializeField] AudioSource sound;
 
     [SerializeField] Transform player;
@@ -14,7 +18,7 @@ public class Pathfinding : MonoBehaviour
     [SerializeField] LayerMask tileMask;
     Vector2Int playerPosRound;
     Vector2Int posRound;
-    float trackCooldown = 0;
+    float trackCooldown = 1;
 
     public static int state = 2; // 0 = idle, 1 = wandering, 2 = pursuit
     float speed = 5f;
@@ -118,7 +122,14 @@ public class Pathfinding : MonoBehaviour
     }
 
     void Update() {
-        RaycastHit2D playerRay = Physics2D.Linecast(transform.position, player.transform.position, tileMask);
+
+        raysSeen = 0;
+        foreach (Vector2 offset in rayOffsets) {
+            RaycastHit2D playerRay = Physics2D.Linecast((Vector2)transform.position + offset, player.transform.position, tileMask);
+            // Debug.DrawLine((Vector2)transform.position + offset, player.transform.position);
+            if (playerRay.collider == null) raysSeen++;
+        }
+        seePlayer = raysSeen >= 3;
 
         if (state == 0) {
             dir = Vector2.zero;
@@ -126,8 +137,9 @@ public class Pathfinding : MonoBehaviour
         }
         if (state == 2) {
             sound.UnPause();
-            if (playerRay.collider == null) {
+            if (seePlayer) {
                 ChasePlayer();
+                trackCooldown = 1;
             }
             else {
                 trackCooldown += Time.deltaTime;
