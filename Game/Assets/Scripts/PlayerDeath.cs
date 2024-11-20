@@ -40,7 +40,7 @@ public class PlayerDeath : MonoBehaviour
         if (deathTimer > deathTimerEnd) {
             jumpscareSound.Stop();
             staticBg.SetActive(true);
-            if (!staticSound.isPlaying && deathTimer - deathTimerEnd < 1) staticSound.Play();
+            if (!staticSound.isPlaying) staticSound.Play();
             return;
         }
 
