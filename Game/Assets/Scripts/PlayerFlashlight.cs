@@ -26,7 +26,7 @@ public class PlayerFlashlight : MonoBehaviour
 
         if (toggle) seeEnemy(rotate);
         else Enemy.seen = false;
-        if (Vector2.Distance(transform.position, enemy1.position) < 3) Enemy.seen = true;
+        if (Vector2.Distance(transform.position, enemy1.position) < 4) Enemy.seen = true;
 
         if (TaskManager.inTask) return;
 
