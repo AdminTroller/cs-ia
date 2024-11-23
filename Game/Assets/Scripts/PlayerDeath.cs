@@ -12,11 +12,13 @@ public class PlayerDeath : MonoBehaviour
     [SerializeField] GameObject jumpscare;
     [SerializeField] AudioSource jumpscareSound;
     [SerializeField] AudioSource staticSound;
-    [SerializeField] GameObject staticBg;
+    [SerializeField] SpriteRenderer staticBg;
+    [SerializeField] Sprite[] staticSprites;
 
     bool dead = false;
     float deathTimer = 0;
     const float deathTimerEnd = 1f;
+    int staticSprite = 0;
 
     float zoomSpeed = 5f;
 
@@ -39,19 +41,24 @@ public class PlayerDeath : MonoBehaviour
 
         if (deathTimer > deathTimerEnd) {
             jumpscareSound.Stop();
-            staticBg.SetActive(true);
-            if (!staticSound.isPlaying) staticSound.Play();
-            return;
-        }
+            staticBg.enabled = true;
+            
+            staticSprite = Mathf.FloorToInt(deathTimer*15) % 5;
+            staticBg.sprite = staticSprites[staticSprite];
 
-        if (jumpscare.transform.localPosition.y < -1) {
-            jumpscare.transform.localPosition += new Vector3(0,30f * Time.deltaTime);
+            if (!staticSound.isPlaying) staticSound.Play();
         }
-        if (jumpscare.transform.localScale.x < 1) {
-            jumpscare.transform.localScale += new Vector3(zoomSpeed*Time.deltaTime,zoomSpeed*Time.deltaTime);
-            zoomSpeed -= 12f * Time.deltaTime;
+        else {
+            if (jumpscare.transform.localPosition.y < -1) {
+                jumpscare.transform.localPosition += new Vector3(0,30f * Time.deltaTime);
+            }
+            if (jumpscare.transform.localScale.x < 1) {
+                jumpscare.transform.localScale += new Vector3(zoomSpeed*Time.deltaTime,zoomSpeed*Time.deltaTime);
+                zoomSpeed -= 12f * Time.deltaTime;
+            }
+            jumpscare.transform.eulerAngles = new Vector3(0,0,Random.Range(-5f,5f));
         }
-        jumpscare.transform.eulerAngles = new Vector3(0,0,Random.Range(-5f,5f));
+        
 
         deathTimer += Time.deltaTime;
     }
