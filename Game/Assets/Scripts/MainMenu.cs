@@ -17,7 +17,7 @@ public class MainMenu : MonoBehaviour
 
     [SerializeField] TextMeshProUGUI skipText;
     const float fadeSpeed = 1f;
-    bool inWarning = false;
+    bool inWarning = true;
     float warningTimer = 0f;
     int warningState = 1;
     bool clicked = false;
@@ -36,6 +36,8 @@ public class MainMenu : MonoBehaviour
     [SerializeField] GameObject hourHand;
     [SerializeField] GameObject minuteHand;
     [SerializeField] GameObject secondHand;
+    [SerializeField] AudioSource tickSound;
+    int previousSecond = -1;
 
     [SerializeField] GameObject UI;
     [SerializeField] GameObject player;
@@ -142,6 +144,11 @@ public class MainMenu : MonoBehaviour
         hourHand.transform.eulerAngles = new Vector3(0,0,(currentTime.Hour * -30) + (currentTime.Minute / -2));
         minuteHand.transform.eulerAngles = new Vector3(0,0,currentTime.Minute * -6);
         secondHand.transform.eulerAngles = new Vector3(0,0,currentTime.Second * -6);
+        if (previousSecond == -1) previousSecond = currentTime.Second; 
+        if (currentTime.Second != previousSecond) {
+            previousSecond = currentTime.Second;
+            tickSound.Play();
+        }
     }
 
     void StartNight(int night) {
