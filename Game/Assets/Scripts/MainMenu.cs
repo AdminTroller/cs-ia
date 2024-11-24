@@ -27,6 +27,7 @@ public class MainMenu : MonoBehaviour
     [SerializeField] Sprite[] staticSprites;
     float staticTimer = 0f;
 
+    [SerializeField] GameObject UI;
     [SerializeField] GameObject player;
     [SerializeField] GameObject enemy;
     [SerializeField] GameObject levelGrid;
@@ -57,7 +58,7 @@ public class MainMenu : MonoBehaviour
         if (Mathf.FloorToInt(warningTimer*1.5f) % 2 == 0) headphones.sprite = headphones1;
         else headphones.sprite = headphones2;
 
-        if (Input.GetMouseButtonDown(0) && headphones.color.a == 1) {
+        if (Input.GetMouseButtonDown(0) && headphones.color.a >= 0.5f) {
             clicked = true;
             warningTimer = 0;
         }
@@ -111,6 +112,7 @@ public class MainMenu : MonoBehaviour
     }
 
     void StartNight(int night) {
+        UI.SetActive(true);
         player.SetActive(true);
         enemy.SetActive(true);
         levelGrid.SetActive(true);

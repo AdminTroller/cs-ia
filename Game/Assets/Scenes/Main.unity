@@ -3719,7 +3719,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &956918022
 Transform:
   m_ObjectHideFlags: 0
@@ -82897,6 +82897,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 583a4d9b07a4e55499f993bc73fe0dfe, type: 3}
   - {fileID: 21300000, guid: 87e8c574194f12e4c95058aa4b9277d8, type: 3}
   - {fileID: 21300000, guid: a2e3d3da4d288ad4cb332b1a2a43ce8d, type: 3}
+  UI: {fileID: 956918021}
   player: {fileID: 312716535}
   enemy: {fileID: 1597952630}
   levelGrid: {fileID: 175044814}
