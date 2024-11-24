@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using System;
 
 public class MainMenu : MonoBehaviour
 {
@@ -22,7 +23,17 @@ public class MainMenu : MonoBehaviour
     bool clicked = false;
     bool warningWait = false;
 
+    [SerializeField] SpriteRenderer staticSR;
+    [SerializeField] Sprite[] staticSprites;
+    float staticTimer = 0f;
+
+    [SerializeField] GameObject player;
+    [SerializeField] GameObject enemy;
+    [SerializeField] GameObject levelGrid;
+
     void Update() {
+        if (Input.GetKeyDown(KeyCode.H)) StartNight(1);
+
         warning.SetActive(inWarning);
         titleScreen.SetActive(!inWarning);
 
@@ -35,7 +46,7 @@ public class MainMenu : MonoBehaviour
         warningTimer += Time.deltaTime;
 
         if (warningWait == true) {
-            if (warningTimer >= 1.5f) inWarning = false;
+            if (warningTimer >= 0.5f) inWarning = false;
             return;
         }
 
@@ -84,7 +95,7 @@ public class MainMenu : MonoBehaviour
             else if (warningTimer >= 3f) {
                 continueText.enabled = true;
                 if (Mathf.FloorToInt(warningTimer) % 2 == 0) {
-                    continueText.color = new Color(0.4f,0.4f,0.4f);
+                    continueText.color = new Color(0.5f,0.5f,0.5f);
                 }
                 else continueText.color = new Color(0.6f,0.6f,0.6f);
             }
@@ -93,5 +104,16 @@ public class MainMenu : MonoBehaviour
 
     void TitleScreen() {
         titleScreen.SetActive(true);
+
+        staticTimer += Time.deltaTime*10;
+        if (staticTimer >= 5) staticTimer -= 5;
+        staticSR.sprite = staticSprites[Mathf.FloorToInt(staticTimer)];
+    }
+
+    void StartNight(int night) {
+        player.SetActive(true);
+        enemy.SetActive(true);
+        levelGrid.SetActive(true);
+        gameObject.SetActive(false);
     }
 }
