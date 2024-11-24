@@ -15,9 +15,9 @@ public class MainMenu : MonoBehaviour
     [SerializeField] Sprite headphones1;
     [SerializeField] Sprite headphones2;
 
-    [SerializeField] TextMeshProUGUI continueText;
+    [SerializeField] TextMeshProUGUI skipText;
     const float fadeSpeed = 1f;
-    bool inWarning = true;
+    bool inWarning = false;
     float warningTimer = 0f;
     int warningState = 1;
     bool clicked = false;
@@ -26,6 +26,16 @@ public class MainMenu : MonoBehaviour
     [SerializeField] SpriteRenderer staticSR;
     [SerializeField] Sprite[] staticSprites;
     float staticTimer = 0f;
+
+    [SerializeField] TextMeshProUGUI newGameText;
+    [SerializeField] TextMeshProUGUI continueText;
+    [SerializeField] BoxCollider2D newGameCollider;
+    [SerializeField] BoxCollider2D continueCollider;
+
+    DateTime currentTime;
+    [SerializeField] GameObject hourHand;
+    [SerializeField] GameObject minuteHand;
+    [SerializeField] GameObject secondHand;
 
     [SerializeField] GameObject UI;
     [SerializeField] GameObject player;
@@ -68,7 +78,7 @@ public class MainMenu : MonoBehaviour
             dangerText.color -= new Color(0,0,0,fadeSpeed*2 * Time.deltaTime);
             headphones.color -= new Color(0,0,0,fadeSpeed*2 * Time.deltaTime);
             headphonesText.color -= new Color(0,0,0,fadeSpeed*2 * Time.deltaTime);
-            continueText.color -= new Color(0,0,0,fadeSpeed*2 * Time.deltaTime);
+            skipText.color -= new Color(0,0,0,fadeSpeed*2 * Time.deltaTime);
             if (warningTimer > 0.5f) {
                 warningState++;
                 warningTimer = 0;
@@ -78,8 +88,8 @@ public class MainMenu : MonoBehaviour
         }
         else {
             if (warningTimer > 0.2f && warningTimer < 3f) {
-                continueText.enabled = false;
-                continueText.color = new Color(0.6f,0.6f,0.6f);
+                skipText.enabled = false;
+                skipText.color = new Color(0.6f,0.6f,0.6f);
                 if (headphones.color.a >= 1) {
                     danger.color = new Color(1,1,1,1);
                     dangerText.color = new Color(1,1,1,1);
@@ -94,11 +104,11 @@ public class MainMenu : MonoBehaviour
                 }
             }
             else if (warningTimer >= 3f) {
-                continueText.enabled = true;
+                skipText.enabled = true;
                 if (Mathf.FloorToInt(warningTimer) % 2 == 0) {
-                    continueText.color = new Color(0.5f,0.5f,0.5f);
+                    skipText.color = new Color(0.5f,0.5f,0.5f);
                 }
-                else continueText.color = new Color(0.6f,0.6f,0.6f);
+                else skipText.color = new Color(0.6f,0.6f,0.6f);
             }
         }
     }
@@ -109,6 +119,29 @@ public class MainMenu : MonoBehaviour
         staticTimer += Time.deltaTime*10;
         if (staticTimer >= 5) staticTimer -= 5;
         staticSR.sprite = staticSprites[Mathf.FloorToInt(staticTimer)];
+
+        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+        if (newGameCollider.OverlapPoint(mousePos)) { // hovering
+            newGameText.text = "New Game <<";
+            if (Input.GetMouseButtonDown(0)) { // click
+                StartNight(1);
+            }
+        }
+        else newGameText.text = "New Game";
+
+        if (continueCollider.OverlapPoint(mousePos)) { // hovering
+            continueText.text = "Continue <<";
+            if (Input.GetMouseButtonDown(0)) { // click
+                StartNight(1);
+            }
+        }
+        else continueText.text = "Continue";
+
+        currentTime = DateTime.Now;
+        hourHand.transform.eulerAngles = new Vector3(0,0,(currentTime.Hour * -30) + (currentTime.Minute / -2));
+        minuteHand.transform.eulerAngles = new Vector3(0,0,currentTime.Minute * -6);
+        secondHand.transform.eulerAngles = new Vector3(0,0,currentTime.Second * -6);
     }
 
     void StartNight(int night) {
