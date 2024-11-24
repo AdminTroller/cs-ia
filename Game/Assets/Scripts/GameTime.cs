@@ -4,7 +4,7 @@ using UnityEngine;
 public class GameTime : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI tDisplay;
-    public float t = 0;
+    public static float t = 0;
     int tHour;
     string tMinutes;
     float tScale = 0.02f;

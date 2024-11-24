@@ -21,6 +21,7 @@ public class Pathfinding : MonoBehaviour
     float trackCooldown = 1;
 
     public int difficulty = 0;
+    public int id;
     public int state = 2; // 0 = idle, 1 = wandering, 2 = pursuit
     float speed = 5f;
     bool inPursuit = false;
@@ -106,6 +107,8 @@ public class Pathfinding : MonoBehaviour
     }
     
     void Start() {
+
+        transform.position = EnemyManager.enemySpawns[id];
 
         walls.CompressBounds();
         bounds = walls.cellBounds;

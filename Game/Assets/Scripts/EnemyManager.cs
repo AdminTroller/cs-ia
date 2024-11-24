@@ -13,12 +13,16 @@ public class EnemyManager : MonoBehaviour
         {0,0,0,0,0},
     };
 
+    public static Vector2[] enemySpawns = new Vector2[] {new Vector2(28.5f,32), new Vector2(0,0), new Vector2(0,0), new Vector2(0,0)};
+
     public void StartNight(int night) {
         for (int i = 0; i < enemies.Length; i++) {
             Pathfinding enemy = enemies[i].GetComponent<Pathfinding>();
             if (enemyDifficulty[i,night-1] > 0) {
                 enemies[i].SetActive(true);
+                enemy.id = i;
                 enemy.difficulty = enemyDifficulty[i,night-1];
+                // enemy.state = 0;
             }
             else enemies[i].SetActive(false);
         } 
