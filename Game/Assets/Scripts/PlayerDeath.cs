@@ -30,7 +30,6 @@ public class PlayerDeath : MonoBehaviour
     void Death() {
         if (deathTimer == 0) {
             mixer.SetFloat("SFXVolume", -80);
-            Pathfinding.state = 0;
             deathUI.SetActive(true);
             jumpscareSound.Play();
 

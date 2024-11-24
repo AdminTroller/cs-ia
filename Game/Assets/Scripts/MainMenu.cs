@@ -39,6 +39,7 @@ public class MainMenu : MonoBehaviour
     [SerializeField] AudioSource tickSound;
     int previousSecond = -1;
 
+    [SerializeField] EnemyManager enemyManager;
     [SerializeField] GameObject UI;
     [SerializeField] GameObject player;
     [SerializeField] GameObject enemy;
@@ -154,7 +155,7 @@ public class MainMenu : MonoBehaviour
     void StartNight(int night) {
         UI.SetActive(true);
         player.SetActive(true);
-        enemy.SetActive(true);
+        enemyManager.StartNight(night);
         levelGrid.SetActive(true);
         gameObject.SetActive(false);
     }

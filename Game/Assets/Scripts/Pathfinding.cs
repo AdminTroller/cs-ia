@@ -20,7 +20,8 @@ public class Pathfinding : MonoBehaviour
     Vector2Int posRound;
     float trackCooldown = 1;
 
-    public static int state = 2; // 0 = idle, 1 = wandering, 2 = pursuit
+    public int difficulty = 0;
+    public int state = 2; // 0 = idle, 1 = wandering, 2 = pursuit
     float speed = 5f;
     bool inPursuit = false;
 
@@ -42,7 +43,7 @@ public class Pathfinding : MonoBehaviour
         return null;
     }
 
-    List<Node> FindPath(int[,] map, Node start, Node end) {
+    List<Node> FindPath(int[,] map, Node start, Node end) { // A* pathfinding algorithm
         List<Node> search = new List<Node>() {start};
         List<Node> processed = new List<Node>();
 

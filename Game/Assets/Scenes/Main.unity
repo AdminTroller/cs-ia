@@ -83150,6 +83150,7 @@ MonoBehaviour:
   minuteHand: {fileID: 781770608}
   secondHand: {fileID: 2053769254}
   tickSound: {fileID: 1812279456}
+  enemyManager: {fileID: 1721974062}
   UI: {fileID: 956918021}
   player: {fileID: 312716535}
   enemy: {fileID: 1597952630}
@@ -84221,7 +84222,7 @@ GameObject:
   - component: {fileID: 1597952637}
   - component: {fileID: 1597952638}
   m_Layer: 6
-  m_Name: Enemy
+  m_Name: Enemy1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -84294,7 +84295,7 @@ Transform:
   m_Children:
   - {fileID: 386525310}
   - {fileID: 1679008113}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1721974061}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &1597952633
 AudioSource:
@@ -84499,6 +84500,8 @@ MonoBehaviour:
   tileMask:
     serializedVersion: 2
     m_Bits: 128
+  difficulty: 0
+  state: 2
   walls: {fileID: 2012802173}
 --- !u!50 &1597952638
 Rigidbody2D:
@@ -84903,6 +84906,53 @@ Canvas:
   m_SortingLayerID: 212337357
   m_SortingOrder: 1
   m_TargetDisplay: 0
+--- !u!1 &1721974060
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1721974061}
+  - component: {fileID: 1721974062}
+  m_Layer: 0
+  m_Name: Enemy Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1721974061
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1721974060}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1597952632}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1721974062
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1721974060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e79f79f090f69b348993122c7bfddaed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemies:
+  - {fileID: 1597952630}
 --- !u!1 &1746872523
 GameObject:
   m_ObjectHideFlags: 0
@@ -85312,7 +85362,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: -1757154003056346352, guid: a75f3a2d3bf393f4b9bb5f088c5148f3, type: 2}
   m_audioClip: {fileID: 8300000, guid: 9c132336584b77f4f8a6067299e8bb33, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.5
+  m_Volume: 0.3
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -144922,7 +144972,7 @@ SceneRoots:
   - {fileID: 1373569291}
   - {fileID: 519420032}
   - {fileID: 312716537}
-  - {fileID: 1597952632}
+  - {fileID: 1721974061}
   - {fileID: 175044816}
   - {fileID: 827624892}
   - {fileID: 2018183395}
