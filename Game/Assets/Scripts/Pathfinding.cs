@@ -7,7 +7,7 @@ public class Pathfinding : MonoBehaviour
     [SerializeField] Rigidbody2D rb;
     Vector2 dir;
 
-    Vector2[] rayOffsets = new Vector2[]{new Vector2(-0.5f,-0.5f), new Vector2(0.5f,-0.5f),new Vector2(-0.5f,0.5f),new Vector2(0.5f,0.5f)};
+    Vector2[] rayOffsets = new Vector2[]{new Vector2(-0.4f,-0.4f), new Vector2(0.4f,-0.4f),new Vector2(-0.4f,0.4f),new Vector2(0.4f,0.4f)};
     int raysSeen = 0;
     bool seePlayer = false;
 
