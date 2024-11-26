@@ -42,6 +42,7 @@ public class Pathfinding : MonoBehaviour
     float startTime;
     float inactiveTime;
 
+    bool activated = false;
     float respawnTimer = 0;
     bool respawning = false;
 
@@ -116,7 +117,8 @@ public class Pathfinding : MonoBehaviour
     
     public void SetStats() {
         baseSpeed = 5f;
-        startTime = ((20 - difficulty) / 20f) + UnityEngine.Random.Range(0,0.2f);
+        startTime = ((20 - difficulty) / 25f) + UnityEngine.Random.Range(0,0.4f);
+        startTime = 0.2f;
         inactiveTime = 20f;
     }
 
@@ -142,7 +144,10 @@ public class Pathfinding : MonoBehaviour
 
     void Update() {
 
-        if (Mathf.Abs(GameTime.t - startTime) < 0.02f) state = 2;
+        if (GameTime.t >= startTime && !activated) {
+            state = 2;
+            activated = true;
+        } 
         if (Enemy.seen && PlayerFlashlight.inFlash && PlayerFlashlight.flashTimer <= 0.1f && state > 0) Respawn();
         if (respawning) RespawnTimer();
 

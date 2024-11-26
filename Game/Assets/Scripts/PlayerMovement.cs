@@ -15,7 +15,7 @@ public class PlayerMovement : MonoBehaviour
     void FixedUpdate() {
         int hor = 0;
         int ver = 0;
-        if (!TaskManager.inTask) {
+        if (!TaskManager.inTask && !PlayerFlashlight.inFlashStart) {
             if (Input.GetKey(KeyCode.W)) ver++;
             if (Input.GetKey(KeyCode.S)) ver--;
             if (Input.GetKey(KeyCode.A)) hor--;

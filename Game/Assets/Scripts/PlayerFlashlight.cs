@@ -17,6 +17,8 @@ public class PlayerFlashlight : MonoBehaviour
     float flashOpacity = 0;
     public static float flashTimer = 0;
     public static bool inFlash = false;
+    public static bool inFlashStart = false;
+    float tempBat;
 
     [SerializeField] Transform enemy1;
     [SerializeField] Collider2D enemy1col;
@@ -31,14 +33,14 @@ public class PlayerFlashlight : MonoBehaviour
         if (TaskManager.inTask) return;
 
         Vector2 displacement = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
-        rotate = -Mathf.Atan(displacement.x/displacement.y) * Mathf.Rad2Deg;
+        if (!inFlashStart) rotate = -Mathf.Atan(displacement.x/displacement.y) * Mathf.Rad2Deg;
         if (displacement.y < 0) rotate -= 180;
         anchor.eulerAngles = Vector3.forward * rotate;
         
         if (Input.GetKeyDown(KeyCode.F) && !Battery.batEmpty && !inFlash) Toggle();
         flashlight.enabled = toggle;
 
-        if (Input.GetKeyDown(KeyCode.Space) && toggle && Battery.bat > 15 && !inFlash) Flash();
+        if (Input.GetKeyDown(KeyCode.Space) && toggle && Battery.bat > 10 && !inFlash) Flash();
         if (inFlash) White();
 
     }
@@ -72,7 +74,7 @@ public class PlayerFlashlight : MonoBehaviour
     void Flash() {
         inFlash = true;
         flashTimer = 0;
-        Battery.bat -= 15;
+        tempBat = Battery.bat;
         sound.clip = flash;
         sound.Play();
     }
@@ -81,16 +83,21 @@ public class PlayerFlashlight : MonoBehaviour
         flashTimer += Time.deltaTime;
 
         if (flashTimer > 0.2f && flashTimer < 1) {
-            if (flashOpacity < 1) flashOpacity += 4 * Time.deltaTime;
+            if (flashOpacity < 1) flashOpacity += 4.5f * Time.deltaTime;
             else flashOpacity = 1;
         }
-        else if (flashTimer > 3) {
+        else if (flashTimer > 1.7f) {
+            flashlight.intensity = 5;
+            Battery.bat = tempBat - 10;
             if (flashOpacity > 0) flashOpacity -= 5 * Time.deltaTime;
             else {
                 flashOpacity = 0;
                 inFlash = false;
             }
         }
+
+        inFlashStart = flashTimer < 1;
+        if (flashTimer < 1) flashlight.intensity += 200 * Time.deltaTime;
 
         white.color = new Color(255,255,255,flashOpacity);
     }
