@@ -28,7 +28,7 @@ public class PlayerFlashlight : MonoBehaviour
         if (toggle) seeEnemy(rotate);
         else foreach (GameObject enemy in enemies) enemy.GetComponent<Enemy>().seen = false;
         foreach (GameObject enemy in enemies) {
-            if (Vector2.Distance(transform.position, enemy.transform.position) < 4) enemy.GetComponent<Enemy>().seen = true;
+            if (Vector2.Distance(transform.position, enemy.transform.position) < 4) enemy.GetComponent<Enemy>().proximitySeen = true;
         }
         if (TaskManager.inTask) return;
 
