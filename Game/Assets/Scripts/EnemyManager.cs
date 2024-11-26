@@ -22,7 +22,8 @@ public class EnemyManager : MonoBehaviour
                 enemies[i].SetActive(true);
                 enemy.id = i;
                 enemy.difficulty = enemyDifficulty[i,night-1];
-                // enemy.state = 0;
+                enemy.state = 0;
+                enemy.SetStats();
             }
             else enemies[i].SetActive(false);
         } 

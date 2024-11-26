@@ -1287,8 +1287,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mixer: {fileID: 24100000, guid: a75f3a2d3bf393f4b9bb5f088c5148f3, type: 2}
-  playerCol: {fileID: 312716539}
-  enemyCol: {fileID: 1679008114}
   deathUI: {fileID: 764620056}
   jumpscare: {fileID: 547125311}
   jumpscareSound: {fileID: 547125314}
@@ -84451,7 +84449,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}

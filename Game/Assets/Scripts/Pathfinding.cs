@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -21,10 +22,10 @@ public class Pathfinding : MonoBehaviour
     Vector2Int posRound;
     float trackCooldown = 1;
 
-    public int difficulty = 0;
+    public int difficulty;
     public int id;
-    public int state = 2; // 0 = idle, 1 = wandering, 2 = pursuit
-    float speed = 5f;
+    public int state; // 0 = idle, 1 = wandering, 2 = pursuit
+    float speed;
     bool inPursuit = false;
 
     [SerializeField] Tilemap walls;
@@ -32,11 +33,17 @@ public class Pathfinding : MonoBehaviour
     int[,] maze;
     List<Node> path;
     int currentNode = -1;
-
     int xOffset;
     int yOffset;
-
     int[,] neighbourOffsets = new int[,] {{-1,0},{1,0},{0,-1},{0,1}};
+
+    //stats
+    float baseSpeed;
+    float startTime;
+    float inactiveTime;
+
+    float respawnTimer = 0;
+    bool respawning = false;
 
     Node FindNode(List<Node> list, int[] pos) { // search for a node in a node list with a given position
         foreach (Node node in list) {
@@ -107,6 +114,12 @@ public class Pathfinding : MonoBehaviour
         return null;
     }
     
+    public void SetStats() {
+        baseSpeed = 5f;
+        startTime = ((20 - difficulty) / 20f) + UnityEngine.Random.Range(0,0.2f);
+        inactiveTime = 20f;
+    }
+
     void Start() {
 
         transform.position = EnemyManager.enemySpawns[id];
@@ -128,6 +141,10 @@ public class Pathfinding : MonoBehaviour
     }
 
     void Update() {
+
+        if (Mathf.Abs(GameTime.t - startTime) < 0.02f) state = 2;
+        if (Enemy.seen && PlayerFlashlight.inFlash && PlayerFlashlight.flashTimer <= 0.1f && state > 0) Respawn();
+        if (respawning) RespawnTimer();
 
         raysSeen = 0;
         foreach (Vector2 offset in rayOffsets) {
@@ -158,6 +175,21 @@ public class Pathfinding : MonoBehaviour
                 PlayerDeath.dead = true;
                 PlayerDeath.enemyType = id;
             }
+        }
+    }
+
+    void Respawn() {
+        state = 0;
+        respawning = true;
+    }
+
+    void RespawnTimer() {
+        respawnTimer += Time.deltaTime;
+        if (respawnTimer >= 0.8f) transform.position = EnemyManager.enemySpawns[id];
+        if (respawnTimer >= inactiveTime) {
+            respawning = false;
+            state = 2;
+            respawnTimer = 0;
         }
     }
 
@@ -201,8 +233,8 @@ public class Pathfinding : MonoBehaviour
     }
 
     void FixedUpdate() {
-        if (inPursuit) speed = 5f;
-        else speed = 3f;
+        if (inPursuit) speed = baseSpeed;
+        else speed = baseSpeed * 0.6f;
         rb.velocity = dir.normalized * speed;
     }
 }

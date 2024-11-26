@@ -15,8 +15,8 @@ public class PlayerFlashlight : MonoBehaviour
     [SerializeField] SpriteRenderer white;
     [SerializeField] AudioClip flash;
     float flashOpacity = 0;
-    float flashTimer = 0;
-    bool inFlash = false;
+    public static float flashTimer = 0;
+    public static bool inFlash = false;
 
     [SerializeField] Transform enemy1;
     [SerializeField] Collider2D enemy1col;
