@@ -33,8 +33,10 @@ public class PlayerFlashlight : MonoBehaviour
         if (TaskManager.inTask) return;
 
         Vector2 displacement = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
-        if (!inFlashStart) rotate = -Mathf.Atan(displacement.x/displacement.y) * Mathf.Rad2Deg;
-        if (displacement.y < 0) rotate -= 180;
+        if (!inFlashStart) {
+            rotate = -Mathf.Atan(displacement.x/displacement.y) * Mathf.Rad2Deg;
+            if (displacement.y < 0) rotate -= 180;
+        } 
         anchor.eulerAngles = Vector3.forward * rotate;
         
         if (Input.GetKeyDown(KeyCode.F) && !Battery.batEmpty && !inFlash) Toggle();
