@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    public static bool seen;
+    public bool seen;
     [SerializeField] SpriteRenderer sprite;
     const int fadeSpeed = 7;
 

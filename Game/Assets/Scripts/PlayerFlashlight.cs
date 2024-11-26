@@ -20,16 +20,16 @@ public class PlayerFlashlight : MonoBehaviour
     public static bool inFlashStart = false;
     float tempBat;
 
-    [SerializeField] Transform enemy1;
-    [SerializeField] Collider2D enemy1col;
+    [SerializeField] GameObject[] enemies;
     [SerializeField] LayerMask mask;
 
     void Update() {
 
         if (toggle) seeEnemy(rotate);
-        else Enemy.seen = false;
-        if (Vector2.Distance(transform.position, enemy1.position) < 4) Enemy.seen = true;
-
+        else foreach (GameObject enemy in enemies) enemy.GetComponent<Enemy>().seen = false;
+        foreach (GameObject enemy in enemies) {
+            if (Vector2.Distance(transform.position, enemy.transform.position) < 4) enemy.GetComponent<Enemy>().seen = true;
+        }
         if (TaskManager.inTask) return;
 
         Vector2 displacement = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
@@ -46,21 +46,23 @@ public class PlayerFlashlight : MonoBehaviour
     }
 
     void seeEnemy(float angleCenter) {
-        Enemy.seen = false;
-        for (int a = -20; a<=20; a+=5) {
-            float angle = angleCenter + a;
-            if (angle > 90) angle -= 360;
-            if (angle < -270) angle += 360;
-            float x = -Mathf.Tan(angle*Mathf.Deg2Rad);
-            int inverter = 1;
-            if (angle < -90 && angle > -270) inverter = -1;
+        foreach (GameObject enemy in enemies) {
+            enemy.GetComponent<Enemy>().seen = false;
+            for (int a = -20; a<=20; a+=5) {
+                float angle = angleCenter + a;
+                if (angle > 90) angle -= 360;
+                if (angle < -270) angle += 360;
+                float x = -Mathf.Tan(angle*Mathf.Deg2Rad);
+                int inverter = 1;
+                if (angle < -90 && angle > -270) inverter = -1;
 
-            // Debug.DrawRay(flashlight.transform.position, new Vector2(x, 1).normalized * 30 * inverter, Color.red);
-            RaycastHit2D ray = Physics2D.Raycast(flashlight.transform.position, new Vector2(x, 1) * inverter, 30, mask);
-            if (ray.collider == enemy1col) {
-                Enemy.seen = true;
-                break;
-            } 
+                // Debug.DrawRay(flashlight.transform.position, new Vector2(x, 1).normalized * 30 * inverter, Color.red);
+                RaycastHit2D ray = Physics2D.Raycast(flashlight.transform.position, new Vector2(x, 1) * inverter, 30, mask);
+                if (ray.collider == enemy.transform.GetChild(0).gameObject.GetComponent<BoxCollider2D>()) {
+                    enemy.GetComponent<Enemy>().seen = true;
+                    break;
+                } 
+            }
         }
     }
 

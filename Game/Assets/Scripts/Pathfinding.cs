@@ -118,7 +118,6 @@ public class Pathfinding : MonoBehaviour
     public void SetStats() {
         baseSpeed = 5f;
         startTime = ((20 - difficulty) / 25f) + UnityEngine.Random.Range(0,0.4f);
-        startTime = 0.2f;
         inactiveTime = 20f;
     }
 
@@ -148,7 +147,7 @@ public class Pathfinding : MonoBehaviour
             state = 2;
             activated = true;
         } 
-        if (Enemy.seen && PlayerFlashlight.inFlash && PlayerFlashlight.flashTimer <= 0.1f && state > 0) Respawn();
+        if (gameObject.GetComponent<Enemy>().seen && PlayerFlashlight.inFlash && PlayerFlashlight.flashTimer <= 0.5f && state > 0) Respawn();
         if (respawning) RespawnTimer();
 
         raysSeen = 0;
