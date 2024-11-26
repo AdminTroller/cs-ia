@@ -26,6 +26,9 @@ public class NumberButtonPrefab : MonoBehaviour
                 pressed = true;
                 NumberButtons.currentNumber++;
             }
+            else if (Input.GetMouseButton(0) && NumberButtons.currentNumber != number) {
+                button.sprite = buttonSprites[3];
+            }
         }
         else button.sprite = buttonSprites[0];
     }
