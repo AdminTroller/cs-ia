@@ -84494,8 +84494,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 1597952638}
   sound: {fileID: 1597952633}
+  enemyCol: {fileID: 1679008114}
   player: {fileID: 312716537}
-  playerCol: {fileID: 0}
+  playerCol: {fileID: 312716539}
   tileMask:
     serializedVersion: 2
     m_Bits: 128

@@ -13,6 +13,7 @@ public class Pathfinding : MonoBehaviour
 
     [SerializeField] AudioSource sound;
 
+    [SerializeField] BoxCollider2D enemyCol;
     [SerializeField] Transform player;
     [SerializeField] BoxCollider2D playerCol;
     [SerializeField] LayerMask tileMask;
@@ -140,7 +141,7 @@ public class Pathfinding : MonoBehaviour
             dir = Vector2.zero;
             sound.Pause();
         }
-        if (state == 2) {
+        if (state > 0) {
             sound.UnPause();
             if (seePlayer) {
                 ChasePlayer();
@@ -151,7 +152,12 @@ public class Pathfinding : MonoBehaviour
                 TrackPlayer();
                 PathfindPlayer();
                 if (trackCooldown >= 1) trackCooldown = 0;
-            } 
+            }
+
+            if (enemyCol.IsTouching(playerCol)) { // player death
+                PlayerDeath.dead = true;
+                PlayerDeath.enemyType = id;
+            }
         }
     }
 
@@ -188,13 +194,7 @@ public class Pathfinding : MonoBehaviour
                 }
             }
 
-            if (currentNode != -1) {
-                // Debug.DrawLine(new Vector2(path[currentNode].pos[1] + xOffset + 0.5f + 0.5f, path[currentNode].pos[0] + yOffset + 0.5f + 0.5f), new Vector2(path[currentNode].pos[1] + xOffset - 0.5f + 0.5f, path[currentNode].pos[0] + yOffset - 0.5f + 0.5f), Color.green);
-                // Debug.DrawLine(new Vector2(path[currentNode].pos[1] + xOffset - 0.5f + 0.5f, path[currentNode].pos[0] + yOffset + 0.5f + 0.5f), new Vector2(path[currentNode].pos[1] + xOffset + 0.5f + 0.5f, path[currentNode].pos[0] + yOffset - 0.5f + 0.5f), Color.green);
-                // transform.position = Vector2.MoveTowards(transform.position, new Vector2(path[currentNode].pos[1] + xOffset + 0.5f, path[currentNode].pos[0] + yOffset + 0.5f), speed * Time.deltaTime);
-
-                dir = new Vector2(path[currentNode].pos[1] + xOffset + 0.5f - transform.position.x, path[currentNode].pos[0] + yOffset + 0.5f - transform.position.y);
-            }
+            if (currentNode != -1) dir = new Vector2(path[currentNode].pos[1] + xOffset + 0.5f - transform.position.x, path[currentNode].pos[0] + yOffset + 0.5f - transform.position.y);
             else dir = Vector2.zero;
             
         }

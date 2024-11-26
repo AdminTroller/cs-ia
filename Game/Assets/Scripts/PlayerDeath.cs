@@ -6,8 +6,6 @@ using UnityEngine.Audio;
 public class PlayerDeath : MonoBehaviour
 {
     [SerializeField] AudioMixer mixer;
-    [SerializeField] BoxCollider2D playerCol;
-    [SerializeField] BoxCollider2D enemyCol;
     [SerializeField] GameObject deathUI;
     [SerializeField] GameObject jumpscare;
     [SerializeField] AudioSource jumpscareSound;
@@ -15,7 +13,8 @@ public class PlayerDeath : MonoBehaviour
     [SerializeField] SpriteRenderer staticBg;
     [SerializeField] Sprite[] staticSprites;
 
-    bool dead = false;
+    public static bool dead = false;
+    public static int enemyType;
     float deathTimer = 0;
     const float deathTimerEnd = 1f;
     int staticSprite = 0;
@@ -23,7 +22,6 @@ public class PlayerDeath : MonoBehaviour
     float zoomSpeed = 5f;
 
     void Update() {
-        if (playerCol.IsTouching(enemyCol)) dead = true;
         if (dead) Death();
     }
 
