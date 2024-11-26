@@ -9,6 +9,8 @@ public class NumberButtonPrefab : MonoBehaviour
     [SerializeField] SpriteRenderer button;
     [SerializeField] Sprite[] buttonSprites;
     [SerializeField] BoxCollider2D buttonCollider;
+    [SerializeField] AudioSource click;
+    [SerializeField] AudioSource fail;
 
     void Start() {
         numberText.text = number.ToString();
@@ -22,12 +24,16 @@ public class NumberButtonPrefab : MonoBehaviour
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if (buttonCollider.OverlapPoint(mousePos)) { // hovering cross
             button.sprite = buttonSprites[1];
-            if (Input.GetMouseButtonDown(0) && NumberButtons.currentNumber == number) { // click
-                pressed = true;
-                NumberButtons.currentNumber++;
-            }
-            else if (Input.GetMouseButton(0) && NumberButtons.currentNumber != number) {
-                button.sprite = buttonSprites[3];
+            if (Input.GetMouseButtonDown(0)) { // click
+                if (NumberButtons.currentNumber == number) { // correct
+                    click.Play();
+                    pressed = true;
+                    NumberButtons.currentNumber++;
+                }
+                else { // wrong
+                    fail.Play();
+                    button.sprite = buttonSprites[3];
+                }
             }
         }
         else button.sprite = buttonSprites[0];

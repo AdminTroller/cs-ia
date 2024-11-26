@@ -16,7 +16,7 @@ public class MainMenu : MonoBehaviour
     [SerializeField] Sprite headphones2;
 
     [SerializeField] TextMeshProUGUI skipText;
-    const float fadeSpeed = 1f;
+    const float fadeSpeed = 1.3f;
     bool inWarning = true;
     float warningTimer = 0f;
     int warningState = 1;
@@ -27,10 +27,12 @@ public class MainMenu : MonoBehaviour
     [SerializeField] Sprite[] staticSprites;
     float staticTimer = 0f;
 
+    bool hovering = false;
     [SerializeField] TextMeshProUGUI newGameText;
     [SerializeField] TextMeshProUGUI continueText;
     [SerializeField] BoxCollider2D newGameCollider;
     [SerializeField] BoxCollider2D continueCollider;
+    [SerializeField] AudioSource hover;
 
     DateTime currentTime;
     [SerializeField] GameObject hourHand;
@@ -82,7 +84,7 @@ public class MainMenu : MonoBehaviour
             headphones.color -= new Color(0,0,0,fadeSpeed*2 * Time.deltaTime);
             headphonesText.color -= new Color(0,0,0,fadeSpeed*2 * Time.deltaTime);
             skipText.color -= new Color(0,0,0,fadeSpeed*2 * Time.deltaTime);
-            if (warningTimer > 0.5f) {
+            if (warningTimer > 0.4f) {
                 warningState++;
                 warningTimer = 0;
                 clicked = false;
@@ -126,6 +128,8 @@ public class MainMenu : MonoBehaviour
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
         if (newGameCollider.OverlapPoint(mousePos)) { // hovering
+            if (!hovering) hover.Play();
+            hovering = true;
             newGameText.text = "New Game <<";
             if (Input.GetMouseButtonDown(0)) { // click
                 StartNight(1);
@@ -134,12 +138,16 @@ public class MainMenu : MonoBehaviour
         else newGameText.text = "New Game";
 
         if (continueCollider.OverlapPoint(mousePos)) { // hovering
+            if (!hovering) hover.Play();
+            hovering = true;
             continueText.text = "Continue <<";
             if (Input.GetMouseButtonDown(0)) { // click
                 StartNight(1);
             }
         }
         else continueText.text = "Continue";
+
+        if (!newGameCollider.OverlapPoint(mousePos) && !continueCollider.OverlapPoint(mousePos)) hovering = false;
 
         currentTime = DateTime.Now;
         hourHand.transform.eulerAngles = new Vector3(0,0,(currentTime.Hour * -30) + (currentTime.Minute / -2));
