@@ -117,8 +117,8 @@ public class Pathfinding : MonoBehaviour
     
     public void SetStats() {
         baseSpeed = 5f;
-        startTime = ((20 - difficulty) / 25f) + UnityEngine.Random.Range(0,0.4f);
-        inactiveTime = 20f;
+        startTime = 6 + ((20 - difficulty) / 25f) + UnityEngine.Random.Range(0f,0.4f);
+        inactiveTime = (20 - difficulty) / 0.75f + UnityEngine.Random.Range(0f,5f);
     }
 
     void Start() {
