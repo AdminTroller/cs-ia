@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] Rigidbody2D rb;
+    public static Vector2 dir;
 
     const float speed = 6.2f;
 
@@ -21,7 +22,8 @@ public class PlayerMovement : MonoBehaviour
             if (Input.GetKey(KeyCode.A)) hor--;
             if (Input.GetKey(KeyCode.D)) hor++;
         }
+        dir = new Vector2(hor, ver);
         
-        rb.velocity = new Vector2(hor, ver).normalized*speed;
+        rb.velocity = dir.normalized*speed;
     }
 }
