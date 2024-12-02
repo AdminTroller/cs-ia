@@ -147,6 +147,8 @@ public class Pathfinding : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.J)) { // DEBUG
             state = 2;
             activated = true;
+            respawning = false;
+            respawnTimer = 0;
         }
 
         if (GameTime.t >= startTime && !activated) {
