@@ -16,6 +16,9 @@ public class Minimap : MonoBehaviour
             GameObject current = Instantiate(taskIndicator, minimap.transform);
             current.transform.localPosition = taskObjects[i].position * ratio + new Vector3(0.9375f, -1.875f);
             current.transform.localPosition = new Vector3(Mathf.Round(current.transform.localPosition.x*16)/16f, Mathf.Round(current.transform.localPosition.y*16)/16f);
+            
+            Task task = taskObjects[i].GetComponent<Task>();
+            task.id = i;
         }
     }
 

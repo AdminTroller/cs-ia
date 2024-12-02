@@ -11,6 +11,7 @@ public class TaskManager : MonoBehaviour
     [SerializeField] BoxCollider2D crossCollider;
 
     [SerializeField] GameObject[] tasks;
+    public static bool[] tasksCompletion = new bool[] {false};
 
     void Update() {
         taskGUI.SetActive(inTask);

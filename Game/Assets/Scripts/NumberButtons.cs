@@ -27,4 +27,11 @@ public class NumberButtons : MonoBehaviour
             }
         }
     }
+
+    void Update() {
+        if (currentNumber == 29) {
+            TaskManager.tasksCompletion[0] = true;
+            TaskManager.inTask = false;
+        }
+    }
 }

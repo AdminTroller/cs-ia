@@ -6,13 +6,15 @@ public class Task : MonoBehaviour
     BoxCollider2D self;
     [SerializeField] BoxCollider2D player;
     bool inRange = false;
+    public int id;
 
     void Awake() {
         self = gameObject.GetComponent<BoxCollider2D>();
     }
 
     void Update() {
-        inRange = self.IsTouching(player);
+        if (TaskManager.tasksCompletion[id]) inRange = false;
+        else inRange = self.IsTouching(player);
         InteractIcon.show = inRange;
 
         if (Input.GetKeyDown(KeyCode.E)) {
