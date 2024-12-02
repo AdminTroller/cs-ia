@@ -13,6 +13,8 @@ public class Pathfinding : MonoBehaviour
     bool seePlayer = false;
 
     [SerializeField] AudioSource sound;
+    [SerializeField] AudioClip footstep;
+    [SerializeField] AudioClip footstepQuick;
 
     [SerializeField] BoxCollider2D enemyCol;
     [SerializeField] Transform player;
@@ -123,7 +125,6 @@ public class Pathfinding : MonoBehaviour
     }
 
     void Start() {
-
         transform.position = EnemyManager.enemySpawns[id];
 
         walls.CompressBounds();
@@ -149,6 +150,8 @@ public class Pathfinding : MonoBehaviour
             activated = true;
             respawning = false;
             respawnTimer = 0;
+            inPursuit = false;
+            pursuitTimer = 0;
         }
 
         if (GameTime.t >= startTime && !activated) {
@@ -166,14 +169,17 @@ public class Pathfinding : MonoBehaviour
                 if (playerRay.collider == null) raysSeen++;
             }
         }
-        seePlayer = raysSeen >= 3;
+        seePlayer = raysSeen >= 4;
 
         if (state == 0) {
             dir = Vector2.zero;
-            sound.Pause();
+            sound.Stop();
         }
         if (state > 0) {
-            sound.UnPause();
+            if (inPursuit) sound.clip = footstepQuick;
+            else sound.clip = footstep;
+            if (!sound.isPlaying) sound.Play();
+
             if (seePlayer) {
                 ChasePlayer();
                 trackCooldown = 1;
