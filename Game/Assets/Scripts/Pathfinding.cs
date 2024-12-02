@@ -27,6 +27,7 @@ public class Pathfinding : MonoBehaviour
     public int state; // 0 = idle, 1 = wandering, 2 = pursuit
     float speed;
     bool inPursuit = false;
+    float pursuitTimer = 0f;
 
     [SerializeField] Tilemap walls;
     BoundsInt bounds;
@@ -116,7 +117,7 @@ public class Pathfinding : MonoBehaviour
     }
     
     public void SetStats() {
-        baseSpeed = 5f;
+        baseSpeed = (difficulty / 10f) + 6.5f;
         startTime = 6 + ((20 - difficulty) / 25f) + UnityEngine.Random.Range(0f,0.4f);
         inactiveTime = (20 - difficulty) / 0.75f + UnityEngine.Random.Range(0f,5f);
     }
@@ -143,6 +144,11 @@ public class Pathfinding : MonoBehaviour
 
     void Update() {
 
+        if (Input.GetKeyDown(KeyCode.J)) { // DEBUG
+            state = 2;
+            activated = true;
+        }
+
         if (GameTime.t >= startTime && !activated) {
             state = 2;
             activated = true;
@@ -151,10 +157,12 @@ public class Pathfinding : MonoBehaviour
         if (respawning) RespawnTimer();
 
         raysSeen = 0;
-        foreach (Vector2 offset in rayOffsets) {
-            RaycastHit2D playerRay = Physics2D.Linecast((Vector2)transform.position + offset, player.transform.position, tileMask);
-            // Debug.DrawLine((Vector2)transform.position + offset, player.transform.position);
-            if (playerRay.collider == null) raysSeen++;
+        if (Mathf.Abs(player.position.x - transform.position.x) <= 16 && Mathf.Abs(player.position.y - transform.position.y) <= 10) { // can only see player within screen range
+            foreach (Vector2 offset in rayOffsets) {
+                RaycastHit2D playerRay = Physics2D.Linecast((Vector2)transform.position + offset, player.transform.position, tileMask);
+                // Debug.DrawLine((Vector2)transform.position + offset, player.transform.position);
+                if (playerRay.collider == null) raysSeen++;
+            }
         }
         seePlayer = raysSeen >= 3;
 
@@ -185,6 +193,7 @@ public class Pathfinding : MonoBehaviour
     void Respawn() {
         state = 0;
         respawning = true;
+        pursuitTimer = 0;
     }
 
     void RespawnTimer() {
@@ -199,6 +208,7 @@ public class Pathfinding : MonoBehaviour
 
     void ChasePlayer() {
         inPursuit = true;
+        pursuitTimer = 0;
         dir = new Vector2(player.transform.position.x - transform.position.x, player.transform.position.y - transform.position.y);
     }
 
@@ -216,7 +226,12 @@ public class Pathfinding : MonoBehaviour
     }
 
     void PathfindPlayer() {
-        inPursuit = false;
+        if (inPursuit) pursuitTimer += Time.deltaTime;
+        if (pursuitTimer > 5f) {
+            inPursuit = false;
+            pursuitTimer = 0;
+        }
+
         if (path != null) {
             for (int i=0; i<path.Count-1; i++) {
                 Debug.DrawLine(new Vector2(path[i].pos[1], path[i].pos[0])+new Vector2(xOffset+0.5f,yOffset+0.5f), new Vector2(path[i+1].pos[1], path[i+1].pos[0])+new Vector2(xOffset+0.5f,yOffset+0.5f),Color.red);
