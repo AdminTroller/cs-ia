@@ -18,9 +18,9 @@ public class Task : MonoBehaviour
         InteractIcon.show = inRange;
 
         if (Input.GetKeyDown(KeyCode.E)) {
+            TaskManager.currentTask = id;
             if (TaskManager.inTask) TaskManager.inTask = false;
             else if (inRange && !TaskManager.inTask) TaskManager.inTask = true;
-            
         }
     }
 }
