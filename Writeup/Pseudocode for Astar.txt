@@ -1,0 +1,73 @@
+# Define the A* pathfinding algorithm "FindPath" which takes parameters
+# MAP (A 2D array of integers representing the game map, with 0 as nothing and 1 as walls),
+# START (A Node object representing the start node of the pathfinding),
+# and END (A Node object representing the end node of the pathfinding)
+# which returns the shortest path from the START node to END node as a list of nodes
+
+define function FindPath with parameters MAP, START, END:
+
+    # Define SEARCH variable as a list of nodes that the algorithm will search through
+    # and find the most optimal one to continue with
+    set SEARCH to a list of nodes initially containing only START
+
+    # Define PROCESSED variable as a list of nodes that the algorithm has already
+    # searched through and helps save time by not computing the same node twice
+    set PROCESSED to a list of nodes that is initially empty
+
+    # Loop until all nodes have been searched and processed
+    while SEARCH is not empty:
+
+        # To find shortest path, we will prioritise nodes that have the highest chance
+        # of being on said path, which would be the one with the lowest F value
+        find node in SEARCH with smallest F value (or smallest H value in case of ties)
+
+        # Once we have chosen the target current node, it is no longer being searched
+        # and we can preemptively move it to PROCESSED
+        set CURRENT to this node
+        remove CURRENT from SEARCH
+        add CURRENT to PROCESSED
+
+        # Check if CURRENT is the END node - this means that pathfinding is complete
+        if CURRENT is END:
+
+            set PATH to empty list of nodes
+            
+            # By recursively going through parents starting from the end node, we can
+            # retrace our shortest path
+            while CURRENT.PARENT is not START:
+
+                add CURRENT.PARENT to PATH
+                set CURRENT to CURRENT.PARENT
+            
+            # Since the path is currently in reverse order since we started from the end,
+            # we should reverse it to give us the nodes in the correct order
+
+            reverse PATH
+            return PATH
+        
+        # Check all neighbouring nodes (up, down, left, right) from CURRENT node
+        for each NEIGHBOUR node of CURRENT:
+
+            # Only concern neighbour if it is traversable and has not already been processed
+            if NEIGHBOUR is not a wall and is not already in PROCESSED:
+
+                # The G cost of a neighbour of a node is 1 more than that node
+                set G to CURRENT.G + 1
+
+                # Update G cost and parent of neighbour only if neighbour is not yet in
+                # consideration of being searched in the future, or if a smaller G cost
+                # is possible for that neighbour node
+                if NEIGHBOUR is not in SEARCH or if G < NEIGHBOUR.G:
+
+                    set NEIGHBOUR.G to G
+                    set NEIGHBOUR.PARENT to CURRENT
+                
+                # Update H cost and add neighbour to SEARCH only if neighbour is not yet
+                # in consideration of being searched in the future
+                if NEIGHBOUR is not in SEARCH:
+
+                    set NEIGHBOUR.H to heuristic distance from NEIGHBOUR to END
+                    add NEIGHBOUR to SEARCH
+
+    # In case a path cannot be found, returns null to prevent errors
+    return null

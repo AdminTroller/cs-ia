@@ -1,0 +1,28 @@
+# When considering tiles in game map for pathfinding algorithm, Node objects act as a tiles
+# each time a new tile needs to be considered
+define class Node:
+
+    # Node's G cost refers to its minimum grid distance from the starting node of pathfinding
+    instantiate public variable G
+
+    # Node's H cost refers to its optimistic/heuristic minimum grid distance from the
+    # ending node of pathfinding, ignoring walls in the way
+    instantiate public variable H
+
+    # Node's F cost is a general number implying the Node's usefulness in being part of
+    # the shortest path, and is the sum of the G and H cost
+    instantiate public variable F that is always set to G + H
+
+    # Node's POS is a 2D array with only 2 numbers: its x and y coordinate
+    instantiate public variable POS
+
+    # Node's PARENT refers to the Node object that was searched in order to get to this node
+    instantiate public variable PARENT
+
+    # Allows Node objects to be created from entering X and Y integer coordinates as parameters
+    constructor with parameters X and Y:
+        set POS to integer array {X, Y}
+    
+    # Gets the optimistic/heuristic grid distance to TARGET, ignoring walls. Used for H cost
+    define function GetDistance with parameter TARGET:
+        return heuristic grid distance from POS to TARGET.POS
