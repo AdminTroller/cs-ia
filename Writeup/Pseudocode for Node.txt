@@ -1,5 +1,5 @@
-# When considering tiles in game map for pathfinding algorithm, Node objects act as a tiles
-# each time a new tile needs to be considered
+# When considering tiles in game map for pathfinding algorithm, each Node object acts as
+# a unique tile, allowing Nodes to be created only for tiles that need to be considered
 define class Node:
 
     # Node's G cost refers to its minimum grid distance from the starting node of pathfinding
