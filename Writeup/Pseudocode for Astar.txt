@@ -20,10 +20,10 @@ define function FindPath with parameters MAP, START, END:
         # To find shortest path, we will prioritise nodes that have the highest chance
         # of being on said path, which would be the one with the lowest F value
         find node in SEARCH with smallest F value (or smallest H value in case of ties)
+        set CURRENT to this node
 
         # Once we have chosen the target current node, it is no longer being searched
         # and we can preemptively move it to PROCESSED
-        set CURRENT to this node
         remove CURRENT from SEARCH
         add CURRENT to PROCESSED
 
