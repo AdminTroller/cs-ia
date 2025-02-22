@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using System;
 using UnityEngine.Audio;
+using System.IO;
 
 public class MainMenu : MonoBehaviour
 {
@@ -40,6 +41,9 @@ public class MainMenu : MonoBehaviour
     [SerializeField] Sprite[] volumeSprites;
     [SerializeField] AudioMixer audioMixer;
 
+    string filePath = "./";
+    string fileName = "save.txt";
+
     DateTime currentTime;
     [SerializeField] GameObject hourHand;
     [SerializeField] GameObject minuteHand;
@@ -52,6 +56,10 @@ public class MainMenu : MonoBehaviour
     [SerializeField] GameObject player;
     [SerializeField] GameObject enemy;
     [SerializeField] GameObject levelGrid;
+
+    void Awake() {
+        LoadVolume();
+    }
 
     void Update() {
         if (Input.GetKeyDown(KeyCode.H)) StartNight(1);
@@ -165,7 +173,10 @@ public class MainMenu : MonoBehaviour
             volume.transform.localPosition = new Vector2(Mathf.Clamp(mousePos.x + 8, (float)-4.8, (float)4.8), 0);
             audioMixer.SetFloat("MasterVolume", 15*volume.transform.localPosition.x/4.4f);
             if (volume.transform.localPosition.x <= -4.75) audioMixer.SetFloat("MasterVolume", -80);
-            if (Input.GetMouseButtonUp(0)) volumeHeld = false;
+            if (Input.GetMouseButtonUp(0)) {
+                volumeHeld = false;
+                SaveVolume();
+            }
         }
         else {
             volume.GetComponent<SpriteRenderer>().sprite = volumeSprites[0];
@@ -179,6 +190,26 @@ public class MainMenu : MonoBehaviour
         if (currentTime.Second != previousSecond) {
             previousSecond = currentTime.Second;
             tickSound.Play();
+        }
+    }
+
+    void SaveVolume() {
+        string path = Path.Combine(filePath, fileName);
+        File.Delete(path);
+        using (StreamWriter save = new StreamWriter(path, true)) {
+            save.WriteLine(volume.transform.localPosition.x);
+        }
+    }
+
+    void LoadVolume() {
+        string path = Path.Combine(filePath, fileName);
+        if (File.Exists(path)) {
+            using (StreamReader save = new StreamReader(path, true)) {
+                float volumePos = float.Parse(save.ReadLine());
+                volume.transform.localPosition = new Vector2(volumePos, 0);
+                audioMixer.SetFloat("MasterVolume", 15*volume.transform.localPosition.x/4.4f);
+                if (volume.transform.localPosition.x <= -4.75) audioMixer.SetFloat("MasterVolume", -80);
+            }
         }
     }
 
