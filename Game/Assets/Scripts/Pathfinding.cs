@@ -194,6 +194,8 @@ public class Pathfinding : MonoBehaviour
             if (enemyCol.IsTouching(playerCol)) { // player death
                 PlayerDeath.dead = true;
                 PlayerDeath.enemyType = id;
+                state = 0;
+                inPursuit = false;
             }
         }
     }

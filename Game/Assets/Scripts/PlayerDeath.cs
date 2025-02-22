@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -12,17 +13,27 @@ public class PlayerDeath : MonoBehaviour
     [SerializeField] AudioSource staticSound;
     [SerializeField] SpriteRenderer staticBg;
     [SerializeField] Sprite[] staticSprites;
+    [SerializeField] TextMeshProUGUI gameOverText;
 
     public static bool dead = false;
     public static int enemyType;
     float deathTimer = 0;
-    const float deathTimerEnd = 1f;
+    const float jumpscareEnd = 1f;
+    const float staticEnd = 5f;
+    const float gameOverEnd = 8f;
     int staticSprite = 0;
-
     float zoomSpeed = 5f;
 
     void Update() {
         if (dead) Death();
+    }
+
+    void Reset() {
+        jumpscare.transform.localPosition = new Vector2(0,-8);
+        jumpscare.transform.eulerAngles = Vector3.zero;
+        jumpscare.transform.localScale = new Vector3(0.05f,0.05f,1);
+        gameOverText.gameObject.SetActive(false);
+        staticBg.enabled = false;
     }
 
     void Death() {
@@ -31,12 +42,23 @@ public class PlayerDeath : MonoBehaviour
             deathUI.SetActive(true);
             jumpscareSound.Play();
 
-            jumpscare.transform.localPosition = new Vector2(0,-8);
-            jumpscare.transform.eulerAngles = Vector3.zero;
-            jumpscare.transform.localScale = new Vector3(0.05f,0.05f,1);
+            Reset();
         }
 
-        if (deathTimer > deathTimerEnd) {
+        if (deathTimer > gameOverEnd) {
+            dead = false;
+            deathTimer = 0;
+            Debug.Break();
+            Application.Quit();
+            Reset();
+        }
+        else if (deathTimer > staticEnd) {
+            staticSound.Stop();
+            jumpscare.SetActive(false);
+            staticBg.enabled = false;
+            gameOverText.gameObject.SetActive(true);
+        }
+        else if (deathTimer > jumpscareEnd) {
             jumpscareSound.Stop();
             staticBg.enabled = true;
             
@@ -46,6 +68,7 @@ public class PlayerDeath : MonoBehaviour
             if (!staticSound.isPlaying) staticSound.Play();
         }
         else {
+            jumpscare.SetActive(true);
             if (jumpscare.transform.localPosition.y < -1.25f) {
                 jumpscare.transform.localPosition += new Vector3(0,30f * Time.deltaTime);
             }
