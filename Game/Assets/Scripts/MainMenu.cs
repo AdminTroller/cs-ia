@@ -35,11 +35,14 @@ public class MainMenu : MonoBehaviour
     [SerializeField] BoxCollider2D newGameCollider;
     [SerializeField] BoxCollider2D continueCollider;
     [SerializeField] AudioSource hover;
+    [SerializeField] AudioSource musicBox;
+    [SerializeField] AudioSource staticSound;
 
     bool volumeHeld = false;
     [SerializeField] GameObject volume;
     [SerializeField] Sprite[] volumeSprites;
     [SerializeField] AudioMixer audioMixer;
+    [SerializeField] AudioSource generatorSound;
 
     string filePath = "./";
     string fileName = "save.txt";
@@ -135,6 +138,9 @@ public class MainMenu : MonoBehaviour
     void TitleScreen() {
         titleScreen.SetActive(true);
 
+        if (!musicBox.isPlaying) musicBox.Play();
+        if (!staticSound.isPlaying) staticSound.Play();
+
         staticTimer += Time.deltaTime*10;
         if (staticTimer >= 5) staticTimer -= 5;
         staticSR.sprite = staticSprites[Mathf.FloorToInt(staticTimer)];
@@ -218,6 +224,7 @@ public class MainMenu : MonoBehaviour
         player.SetActive(true);
         enemyManager.StartNight(night);
         levelGrid.SetActive(true);
+        generatorSound.Play();
         gameObject.SetActive(false);
     }
 }
