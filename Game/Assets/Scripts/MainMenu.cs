@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using System;
+using UnityEngine.Audio;
 
 public class MainMenu : MonoBehaviour
 {
@@ -33,6 +34,11 @@ public class MainMenu : MonoBehaviour
     [SerializeField] BoxCollider2D newGameCollider;
     [SerializeField] BoxCollider2D continueCollider;
     [SerializeField] AudioSource hover;
+
+    bool volumeHeld = false;
+    [SerializeField] GameObject volume;
+    [SerializeField] Sprite[] volumeSprites;
+    [SerializeField] AudioMixer audioMixer;
 
     DateTime currentTime;
     [SerializeField] GameObject hourHand;
@@ -148,6 +154,22 @@ public class MainMenu : MonoBehaviour
         else continueText.text = "Continue";
 
         if (!newGameCollider.OverlapPoint(mousePos) && !continueCollider.OverlapPoint(mousePos)) hovering = false;
+
+        if (volume.GetComponent<BoxCollider2D>().OverlapPoint(mousePos)) {
+            if (Input.GetMouseButtonDown(0)) { // click
+                volumeHeld = true;
+            }
+        }
+        if (volumeHeld) {
+            volume.GetComponent<SpriteRenderer>().sprite = volumeSprites[1];
+            volume.transform.localPosition = new Vector2(Mathf.Clamp(mousePos.x + 8, (float)-4.8, (float)4.8), 0);
+            audioMixer.SetFloat("MasterVolume", 15*volume.transform.localPosition.x/4.4f);
+            if (volume.transform.localPosition.x <= -4.75) audioMixer.SetFloat("MasterVolume", -80);
+            if (Input.GetMouseButtonUp(0)) volumeHeld = false;
+        }
+        else {
+            volume.GetComponent<SpriteRenderer>().sprite = volumeSprites[0];
+        }
 
         currentTime = DateTime.Now;
         hourHand.transform.eulerAngles = new Vector3(0,0,(currentTime.Hour * -30) + (currentTime.Minute / -2));
