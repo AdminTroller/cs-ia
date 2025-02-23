@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
     [SerializeField] Transform player;
+    [SerializeField] TextMeshProUGUI fpsTest;
 
     void Update() {
         transform.position = new Vector3(Mathf.Clamp(player.position.x, -30f, 17f), Mathf.Clamp(player.position.y, -17f, 32f), -10);
+        fpsTest.text = "FPS: " + (Mathf.Round(100 / Time.deltaTime)/100).ToString();
     }
 }
