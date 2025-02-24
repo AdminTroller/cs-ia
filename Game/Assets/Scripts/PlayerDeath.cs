@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.SceneManagement;
 
 public class PlayerDeath : MonoBehaviour
 {
@@ -48,9 +49,10 @@ public class PlayerDeath : MonoBehaviour
         if (deathTimer > gameOverEnd) {
             dead = false;
             deathTimer = 0;
-            Debug.Break();
-            Application.Quit();
-            Reset();
+            // Debug.Break();
+            // Application.Quit();
+            // Reset();
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
         else if (deathTimer > staticEnd) {
             staticSound.Stop();
