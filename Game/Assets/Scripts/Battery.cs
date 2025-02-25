@@ -12,7 +12,7 @@ public class Battery : MonoBehaviour
 
     public static float bat = 100;
     public static bool batEmpty = false;
-    float drainRate = 0.4f;
+    const float drainRate = 0.4f;
 
     void Update() {
         Drain();
