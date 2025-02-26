@@ -1,0 +1,13 @@
+# Normalizes a 2D vector by changing its magnitude to 1
+# while keeping the ratio of X and Y constant
+define function Normalize with parameters X,Y
+
+	# Uses the 2D distance formula to obtain the magnitude of the current vector
+	set MAGNITUDE to square root of (x^2 + y^2)
+
+	# Divides the individual X and Y components by the magnitude of the vector
+	# This scales the vector in a way that causes its new magnitude to always be equal 1
+	set X to X / MAGNITUDE
+	set Y to Y / MAGNITUDE
+
+	return X, Y
