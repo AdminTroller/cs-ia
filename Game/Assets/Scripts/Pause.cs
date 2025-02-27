@@ -1,10 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
+// UNUSED
 using UnityEngine;
 
 public class Pause : MonoBehaviour
 {
-    // UNUSED
     public static bool paused = false;
     [SerializeField] GameObject fade;
     [SerializeField] GameObject textCanvas;
