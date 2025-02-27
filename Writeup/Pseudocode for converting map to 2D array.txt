@@ -1,0 +1,18 @@
+# A 2D array variable is defined that represents the game map regarding
+# whether each tile is empty or is a wall
+set MAZE to a 2D array of integers with a size corresponding to the actual game map's size
+
+# Loops through each index of MAZE
+for each ROW in MAZE:
+
+	for each COLUMN in MAZE:
+
+		# Checks tile of specified row and column position on the actual map
+		# If it is a wall, set value to 1, otherwise set to 0
+		if tile in actual game map with the current ROW and COLUMN is a wall:
+
+			set MAZE[COLUMN, ROW] to 1
+
+		else:
+
+			set MAZE[COLUMN, ROW] to 0

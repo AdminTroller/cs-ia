@@ -1,0 +1,18 @@
+# This function converts an angle, in degrees, with 0 degrees representing north and increasing anticlockwise
+# into a 2D vector representation of X and Y
+define function AngleToVector with parameters ANGLE:
+
+	# In maths, tangent of an angle is equal the opposite side length / adjacent side length
+	# of a right angled triangle from the angle. By starting from the origin, drawing a
+	# right angled triangle with our given angle allows the opposite side to be horizontal (X)
+	# and the adjacent side to be (Y). Since we set Y to 1, the angle's tangent would be X/1 = X.
+	set X to tan(ANGLE)
+	set Y to 1
+	
+	# Between 90 and 270 degrees, the angle is pointing downwards, so the Y value must be negative
+	if ANGLE > 90 or ANGLE < 270:
+		
+		set Y to -1
+
+	VECTOR = (X, Y)
+	return VECTOR
