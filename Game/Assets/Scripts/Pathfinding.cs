@@ -45,9 +45,9 @@ public class Pathfinding : MonoBehaviour
     float startTime;
     float inactiveTime;
 
-    bool activated = false;
-    float respawnTimer = 0;
-    bool respawning = false;
+    bool activated = false; // is enemy moving?
+    float respawnTimer = 0; // how long enemy has been waiting to respawn for
+    bool respawning = false; // when enemy gets stunned, it starts respawning
 
     Node FindNode(List<Node> list, int[] pos) { // search for a node in a node list with a given position
         foreach (Node node in list) {
@@ -60,6 +60,7 @@ public class Pathfinding : MonoBehaviour
         List<Node> search = new List<Node>() {start};
         List<Node> processed = new List<Node>();
 
+        // select expected best next node
         while (search.Count != 0) {
             Node current = search[0];
             foreach (Node n in search) {
@@ -71,6 +72,7 @@ public class Pathfinding : MonoBehaviour
             search.Remove(current);
             processed.Add(current);
 
+            // pathfinding complete
             if (current.pos[0] == end.pos[0] && current.pos[1] == end.pos[1]) {
                 List<Node> path = new List<Node>();
                 Node traceback = current;
@@ -82,6 +84,7 @@ public class Pathfinding : MonoBehaviour
                 return path;
             }
 
+            // processes neighbouring nodes of current node
             for (int i = 0; i < neighbourOffsets.GetLength(0); i++) {
 
                 int[] nPos = {current.pos[0] + neighbourOffsets[i,0], current.pos[1] + neighbourOffsets[i,1]};
@@ -114,7 +117,7 @@ public class Pathfinding : MonoBehaviour
             // foreach (Node node in processed) Debug.Log("Node: " + node.pos[0] + " " + node.pos[1] + " | F: " + node.f + " | G: " + node.g + " | H: " + node.h);
 
         }
-
+        // if path cannot be found, return null
         return null;
     }
     
@@ -130,6 +133,8 @@ public class Pathfinding : MonoBehaviour
         walls.CompressBounds();
         bounds = walls.cellBounds;
 
+        // convert actual game map to 2D array representation
+        // 0 = empty tile, 1 = wall
         maze = new int[bounds.yMax - bounds.yMin, bounds.xMax - bounds.xMin];
         for (int j=bounds.yMax-1; j>=bounds.yMin; j--) {
             for (int i=bounds.xMin; i<=bounds.xMax-1; i++) {
@@ -145,7 +150,7 @@ public class Pathfinding : MonoBehaviour
 
     void Update() {
 
-        if (Input.GetKeyDown(KeyCode.J)) { // DEBUG
+        if (Input.GetKeyDown(KeyCode.J)) { // debug activate enemy
             state = 2;
             activated = true;
             respawning = false;
@@ -161,6 +166,7 @@ public class Pathfinding : MonoBehaviour
         if (gameObject.GetComponent<Enemy>().seen && PlayerFlashlight.inFlash && PlayerFlashlight.flashTimer <= 0.5f && state > 0) Respawn();
         if (respawning) RespawnTimer();
 
+        // check if enemy can directly see player in line of sight
         raysSeen = 0;
         if (Mathf.Abs(player.position.x - transform.position.x) <= 16 && Mathf.Abs(player.position.y - transform.position.y) <= 10) { // can only see player within screen range
             foreach (Vector2 offset in rayOffsets) {
@@ -180,11 +186,11 @@ public class Pathfinding : MonoBehaviour
             else sound.clip = footstep;
             if (!sound.isPlaying) sound.Play();
 
-            if (seePlayer) {
+            if (seePlayer) { // speed up after seeing player directly
                 ChasePlayer();
                 trackCooldown = 1;
             }
-            else {
+            else { // use A* pathfinding to find player
                 trackCooldown += Time.deltaTime;
                 TrackPlayer();
                 PathfindPlayer();
@@ -235,7 +241,7 @@ public class Pathfinding : MonoBehaviour
         }
     }
 
-    void PathfindPlayer() {
+    void PathfindPlayer() { // follow A* pathfinding path to reach player
         if (inPursuit) pursuitTimer += Time.deltaTime;
         if (pursuitTimer > 5f) {
             inPursuit = false;
@@ -248,6 +254,7 @@ public class Pathfinding : MonoBehaviour
             }
 
             for (int i=0; i<path.Count; i++) {
+                // gets closest node in shortest path and chooses next node as target
                 if (Mathf.Abs(transform.position.x - 0.5f - xOffset - path[i].pos[1]) <= 0.8f && Mathf.Abs(transform.position.y - 0.5f - yOffset - path[i].pos[0]) <= 0.8f) {
                     currentNode = i+1;
                     if (currentNode >= path.Count) currentNode -= 1;
@@ -261,7 +268,7 @@ public class Pathfinding : MonoBehaviour
         }
     }
 
-    void FixedUpdate() {
+    void FixedUpdate() { // modify enemy velocity to create movement
         if (inPursuit) speed = baseSpeed;
         else speed = baseSpeed * 0.6f;
         rb.velocity = dir.normalized * speed;

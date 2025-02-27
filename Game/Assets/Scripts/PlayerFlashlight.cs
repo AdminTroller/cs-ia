@@ -4,6 +4,7 @@ using UnityEngine.Rendering.Universal;
 
 public class PlayerFlashlight : MonoBehaviour
 {
+    // flashlight variables
     [SerializeField] Light2D flashlight;
     [SerializeField] Transform anchor;
     [SerializeField] AudioSource sound;
@@ -12,6 +13,7 @@ public class PlayerFlashlight : MonoBehaviour
     public static bool toggle = true;
     float rotate = 0;
 
+    // flashlight stun variables
     [SerializeField] SpriteRenderer white;
     [SerializeField] AudioClip flash;
     float flashOpacity = 0;
@@ -27,11 +29,14 @@ public class PlayerFlashlight : MonoBehaviour
 
         if (toggle) seeEnemy(rotate);
         else foreach (GameObject enemy in enemies) enemy.GetComponent<Enemy>().seen = false;
+
+        // check if player is close to enemy
         foreach (GameObject enemy in enemies) {
             enemy.GetComponent<Enemy>().proximitySeen = Vector2.Distance(transform.position, enemy.transform.position) < 4;
         }
         if (TaskManager.inTask) return;
 
+        // point flashlight towards mouse cursor
         Vector2 displacement = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
         if (!inFlashStart) {
             rotate = -Mathf.Atan(displacement.x/displacement.y) * Mathf.Rad2Deg;
@@ -39,14 +44,17 @@ public class PlayerFlashlight : MonoBehaviour
         } 
         anchor.eulerAngles = Vector3.forward * rotate;
         
+        // toggle flashlight
         if (Input.GetKeyDown(KeyCode.F) && !Battery.batEmpty && !inFlash) Toggle();
         flashlight.enabled = toggle;
 
+        // keybind to use flashlight stun on enemy
         if (Input.GetKeyDown(KeyCode.Space) && toggle && Battery.bat > 10 && !inFlash) Flash();
         if (inFlash) White();
 
     }
 
+    // check if flashlight's light can see enemy
     void seeEnemy(float angleCenter) {
         foreach (GameObject enemy in enemies) {
             enemy.GetComponent<Enemy>().seen = false;
@@ -68,6 +76,7 @@ public class PlayerFlashlight : MonoBehaviour
         }
     }
 
+    // flashlight toggle sound effect
     public void Toggle() {
         toggle = !toggle;
             if (toggle) sound.clip = on;
@@ -75,6 +84,7 @@ public class PlayerFlashlight : MonoBehaviour
             sound.Play();
     }
 
+    // flashlight stun used
     void Flash() {
         inFlash = true;
         flashTimer = 0;
@@ -83,6 +93,7 @@ public class PlayerFlashlight : MonoBehaviour
         sound.Play();
     }
 
+    // visual effect for flashlight stun
     void White() {
         flashTimer += Time.deltaTime;
 

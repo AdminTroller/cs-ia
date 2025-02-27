@@ -13,10 +13,12 @@ public class Task : MonoBehaviour
     }
 
     void Update() {
+        // allow player to access task if within proximity
         if (TaskManager.tasksCompletion[id]) inRange = false;
         else inRange = self.IsTouching(player);
         InteractIcon.show = inRange;
 
+        // open up task
         if (Input.GetKeyDown(KeyCode.E)) {
             TaskManager.currentTask = id;
             if (TaskManager.inTask) TaskManager.inTask = false;

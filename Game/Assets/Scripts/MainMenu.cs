@@ -17,6 +17,7 @@ public class MainMenu : MonoBehaviour
     [SerializeField] Sprite headphones1;
     [SerializeField] Sprite headphones2;
 
+    // warning screen variables
     [SerializeField] TextMeshProUGUI skipText;
     const float fadeSpeed = 1.3f;
     bool inWarning = true;
@@ -29,6 +30,7 @@ public class MainMenu : MonoBehaviour
     [SerializeField] Sprite[] staticSprites;
     float staticTimer = 0f;
 
+    // main menu buttons
     bool hovering = false;
     [SerializeField] TextMeshProUGUI newGameText;
     [SerializeField] TextMeshProUGUI continueText;
@@ -38,15 +40,18 @@ public class MainMenu : MonoBehaviour
     [SerializeField] AudioSource musicBox;
     [SerializeField] AudioSource staticSound;
 
+    // main menu volume slider
     bool volumeHeld = false;
     [SerializeField] GameObject volume;
     [SerializeField] Sprite[] volumeSprites;
     [SerializeField] AudioMixer audioMixer;
     [SerializeField] AudioSource generatorSound;
 
+    // save file directory path
     string filePath = "./";
     string fileName = "save.txt";
 
+    // main menu clock display
     DateTime currentTime;
     [SerializeField] GameObject hourHand;
     [SerializeField] GameObject minuteHand;
@@ -65,7 +70,7 @@ public class MainMenu : MonoBehaviour
     }
 
     void Update() {
-        if (Input.GetKeyDown(KeyCode.H)) StartNight(1);
+        if (Input.GetKeyDown(KeyCode.H)) StartNight(1); // debug start night
 
         warning.SetActive(inWarning);
         titleScreen.SetActive(!inWarning);
@@ -74,7 +79,7 @@ public class MainMenu : MonoBehaviour
         else TitleScreen();
     }
 
-    void Warning() {
+    void Warning() { // health and safety warnings before game starts
 
         warningTimer += Time.deltaTime;
 
@@ -135,7 +140,7 @@ public class MainMenu : MonoBehaviour
         }
     }
 
-    void TitleScreen() {
+    void TitleScreen() { // creates interactable buttons and music in title screen
         titleScreen.SetActive(true);
 
         if (!musicBox.isPlaying) musicBox.Play();
@@ -145,6 +150,7 @@ public class MainMenu : MonoBehaviour
         if (staticTimer >= 5) staticTimer -= 5;
         staticSR.sprite = staticSprites[Mathf.FloorToInt(staticTimer)];
 
+        // gets user's mouse position
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
         if (newGameCollider.OverlapPoint(mousePos)) { // hovering
@@ -169,6 +175,7 @@ public class MainMenu : MonoBehaviour
 
         if (!newGameCollider.OverlapPoint(mousePos) && !continueCollider.OverlapPoint(mousePos)) hovering = false;
 
+        // volume slider interactable
         if (volume.GetComponent<BoxCollider2D>().OverlapPoint(mousePos)) {
             if (Input.GetMouseButtonDown(0)) { // click
                 volumeHeld = true;
@@ -188,6 +195,7 @@ public class MainMenu : MonoBehaviour
             volume.GetComponent<SpriteRenderer>().sprite = volumeSprites[0];
         }
 
+        // simulating real-time clock in title screen
         currentTime = DateTime.Now;
         hourHand.transform.eulerAngles = new Vector3(0,0,(currentTime.Hour * -30) + (currentTime.Minute / -2));
         minuteHand.transform.eulerAngles = new Vector3(0,0,currentTime.Minute * -6);
@@ -199,7 +207,7 @@ public class MainMenu : MonoBehaviour
         }
     }
 
-    void SaveVolume() {
+    void SaveVolume() { // save volume slider setting
         string path = Path.Combine(filePath, fileName);
         File.Delete(path);
         using (StreamWriter save = new StreamWriter(path, true)) {
@@ -207,7 +215,7 @@ public class MainMenu : MonoBehaviour
         }
     }
 
-    void LoadVolume() {
+    void LoadVolume() { // load volume slider setting
         string path = Path.Combine(filePath, fileName);
         if (File.Exists(path)) {
             using (StreamReader save = new StreamReader(path, true)) {
@@ -219,6 +227,7 @@ public class MainMenu : MonoBehaviour
         }
     }
 
+    // starts a night/level
     void StartNight(int night) {
         UI.SetActive(true);
         player.SetActive(true);

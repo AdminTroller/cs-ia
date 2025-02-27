@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.Search;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
@@ -38,6 +39,7 @@ public class PlayerDeath : MonoBehaviour
     }
 
     void Death() {
+        // when enemy collides with player, initiate jumpscare
         if (deathTimer == 0) {
             mixer.SetFloat("SFXVolume", -80);
             deathUI.SetActive(true);
@@ -46,7 +48,7 @@ public class PlayerDeath : MonoBehaviour
             Reset();
         }
 
-        if (deathTimer > gameOverEnd) {
+        if (deathTimer > gameOverEnd) { // after showing game over, return to menu
             dead = false;
             deathTimer = 0;
             // Debug.Break();
@@ -54,13 +56,13 @@ public class PlayerDeath : MonoBehaviour
             // Reset();
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
-        else if (deathTimer > staticEnd) {
+        else if (deathTimer > staticEnd) { // after showing static, show game over
             staticSound.Stop();
             jumpscare.SetActive(false);
             staticBg.enabled = false;
             gameOverText.gameObject.SetActive(true);
         }
-        else if (deathTimer > jumpscareEnd) {
+        else if (deathTimer > jumpscareEnd) { // after showing jumpscare, show static
             jumpscareSound.Stop();
             staticBg.enabled = true;
             
@@ -69,7 +71,7 @@ public class PlayerDeath : MonoBehaviour
 
             if (!staticSound.isPlaying) staticSound.Play();
         }
-        else {
+        else { // jumpscare animation
             jumpscare.SetActive(true);
             if (jumpscare.transform.localPosition.y < -1.25f) {
                 jumpscare.transform.localPosition += new Vector3(0,30f * Time.deltaTime);

@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class PlayerAnimation : MonoBehaviour
 {
+    // player walking animation sprites
     [SerializeField] SpriteRenderer sr;
     [SerializeField] Sprite[] front;
     [SerializeField] Sprite[] back;
@@ -32,6 +33,7 @@ public class PlayerAnimation : MonoBehaviour
         if (currentDir == "left") sr.sprite = left[Mathf.FloorToInt(animationTimer)];
         if (currentDir == "right") sr.sprite = right[Mathf.FloorToInt(animationTimer)];
 
+        // animate sprite while walking
         if (dir.x != 0 || dir.y != 0) {
             animationTimer += Time.deltaTime * 6;
             if (animationTimer >= 4) animationTimer -= 4;

@@ -6,6 +6,7 @@ public class Location : MonoBehaviour
     [SerializeField] TextMeshProUGUI locationText;
     [SerializeField] BoxCollider2D[] areas;
     [SerializeField] BoxCollider2D player;
+    // list of areas in game map
     string[] areaNames = {"Office","Storage","Server Room","Right Generator","Ventilation","Bathrooms","Laboratory","Cellar","Left Generator","Exit"};
     string areaName = "Office";
 
@@ -17,7 +18,7 @@ public class Location : MonoBehaviour
             }
             areaName = "";
         }
-        locationText.text = areaName;
+        locationText.text = areaName; // shows with UI element which area of the map the player is in
     }
 
 }
